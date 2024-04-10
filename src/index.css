@@ -380,16 +380,9 @@ a:active {
 }
 
 .form-floating{
-  color: #253745;
+  color: #040f14;
 }
 
-#floatingInput{
-  background-color: #9BA8AB;
-}
-
-#floatingPassword{
-  background-color: #9BA8AB;
-}
 
 .modal-content button{
   background-color: #06141B;
@@ -411,5 +404,4 @@ a:active {
 .signuptext{
   text-shadow: 1px 1px 0 #06141B, -1px -1px 0 #06141B, 1px -1px 0 #06141B, -1px 1px 0 #06141B;
 }
-
 

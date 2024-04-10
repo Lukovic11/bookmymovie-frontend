@@ -9,6 +9,7 @@ import MovieScreenings from './components/MovieScreenings';
 import ComingSoon from './components/ComingSoon';
 import NotFound from './components/NotFound';
 import SignUp from './components/SignUp';
+import LogIn from './components/LogIn';
 
 
 function App() {
@@ -28,7 +29,10 @@ function App() {
             <Route exact path="/coming-soon">
               <ComingSoon />
             </Route>
-            <Route exact path="/sign-up">
+            <Route exact path="/login">
+              <LogIn />
+            </Route>
+            <Route exact path="/signup">
               <SignUp />
             </Route>
             <Route path='/movies/*'>
