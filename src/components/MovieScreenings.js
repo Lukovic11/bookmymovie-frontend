@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Movies } from '../movies.js'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { Link } from "react-router-dom";
 
 const MovieScreenings = () => {
   const [movies, setMovies] = useState([]);

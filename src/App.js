@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MovieDetails from './components/MovieDetails';
@@ -14,38 +14,31 @@ import LogIn from './components/LogIn';
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <div className="App" >
         <Navbar />
         <div className="content">
-          <Switch>
-            <Route exact path="/">
-              <Home/>
-            </Route>
-            <Route exact path="/movies">
-              <MovieScreenings/>
-            </Route>
-            <Route exact path="/movies/:id" component={MovieDetails}/>
-            <Route exact path="/coming-soon">
-              <ComingSoon />
-            </Route>
-            <Route exact path="/login">
-              <LogIn />
-            </Route>
-            <Route exact path="/signup">
-              <SignUp />
-            </Route>
-            <Route path='/movies/*'>
-              <NotFound/>
-            </Route>
-            <Route path='/*'>
-              <NotFound/>
-            </Route>
-          </Switch>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+
+            <Route exact path="/movies" element={<MovieScreenings />} />
+
+            <Route exact path="/movies/:id" element={<MovieDetails />} />
+
+            <Route exact path="/coming-soon" element={<ComingSoon />} />
+
+            <Route exact path="/login" element={<LogIn />} />
+
+            <Route exact path="/signup" element={<SignUp />} />
+
+            <Route path='/movies/*' element={<NotFound />} />
+
+            <Route path='/*' element={<NotFound />} />
+          </Routes>
         </div>
         <Footer />
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

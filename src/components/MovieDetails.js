@@ -1,13 +1,14 @@
 import { Movies } from '../movies';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import {useParams, useNavigate} from 'react-router-dom';
 
 const MovieDetails = ({ match }) => {
-  const { id } = match.params;
+  const { id } = useParams();
   const movie = Movies.find(movie => movie.id === parseInt(id));
 
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchYoutubeLink = async () => {
@@ -25,7 +26,7 @@ const MovieDetails = ({ match }) => {
   }, [movie]);
 
   if (!movie) {
-    return <Redirect to="/not-found" />;
+    return navigate('/not-found');
   }
 
   return (
