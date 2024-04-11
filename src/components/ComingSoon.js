@@ -1,16 +1,32 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Movies } from '../movies.js'
 import { Link } from "react-router-dom";
+import api from "../Api.js"
 
 const ComingSoon = () => {
 
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    const comingSoonMovies = Movies.filter(movie => movie.nowPlaying === false);
-    setMovies(comingSoonMovies);
+    const getMovies=async()=>{
+      try {
+        const response=await api.get("/api/movies");
+        console.log(response.data);
+        const allMovies=response.data;
+        setMovies(allMovies.filter(movie=>movie.isPlaying===false));
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+      }
+    }
+    getMovies();
   }, [])
+
 
   return (
     <div className="screenings">
@@ -19,10 +35,7 @@ const ComingSoon = () => {
         {movies.map((movie) => (
           <div className="movie-item" key={movie.id} >
             <div className="flex">
-              <img
-                src={movie.poster}
-                alt={movie.title}
-              />
+            {movie.poster && <img src={movie.poster} alt={movie.title} />}
               <Link to={`/movies/${movie.id}`}>
                 <button className='button-85'>Details</button>
               </Link>
