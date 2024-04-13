@@ -2,11 +2,21 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from "../Api.js"
+import BookTicketsModal from './BookTicketsModal.js';
 
 const MovieDetails = ({ }) => {
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen]=useState(false);
+
+  const openModal = ()=>{
+    setIsModalOpen(true);
+  }
+
+  const closeModal=()=>{
+    setIsModalOpen(false);
+  }
 
   useEffect(() => {
     const getMovie = async () => {
@@ -73,9 +83,10 @@ const MovieDetails = ({ }) => {
               allowFullScreen
             ></iframe>
           )}
-          {movie.isPlaying && <button className="button-85">
+          {movie.isPlaying && <button className="button-85" onClick={openModal}>
             Book Tickets
           </button>}
+          {isModalOpen && (<BookTicketsModal isOpen={isModalOpen} onClose={closeModal} id={id}/>)}
           {!movie.isPlaying && <p className='not-available'>Coming soon.</p>}
         </div>
       </div>

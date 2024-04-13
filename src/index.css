@@ -376,7 +376,11 @@ a:active {
 }
 
 .modal-content{
-  background-color: #253745 !important;
+  background-color: #11212D !important;
+}
+
+.smaller-height{
+  max-height: 550px !important;
 }
 
 .form-floating{
@@ -403,5 +407,52 @@ a:active {
 
 .signuptext{
   text-shadow: 1px 1px 0 #06141B, -1px -1px 0 #06141B, 1px -1px 0 #06141B, -1px 1px 0 #06141B;
+  padding-top: 5px;
 }
 
+.less-padding{
+  padding-bottom: 10px !important;
+}
+
+
+
+/*Book Tickets Modal*/
+.modal {
+  position: fixed;
+  width: 50%;
+  height: 50%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 400px; /* Adjust as needed */
+}
+
+.close {
+  display: flex;
+  color: #aaa;
+  float: right;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  justify-content: flex-end ;
+}
+
+.header-modal{
+  display: flex;
+  justify-content: space-between;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
