@@ -43,53 +43,64 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
   const handleBooking = async (e) => {
     e.preventDefault();
+    
+    // Check if all required fields are set
+    if (!selectedDate || !selectedTimeSlot || !ticketQuantity) {
+        console.error('Missing required fields');
+        return;
+    }
+    
     try {
-      const response = await api.get("/api/screenings/" + selectedDate + "/" + selectedTimeSlot + "/" + id);
-      setScreening(response.data);
-      bookTickets();
+        // Make the API request to get screening data
+        const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
+        const screeningData = response.data;
+        
+        if (response.status !== 200) {
+            console.error(`Error fetching screening data: ${response.status} ${response.statusText}`);
+            return;
+        }
+        
+        // Set the screening state
+        setScreening(screeningData);
+        
+        // Proceed with booking tickets if screening data is available
+        await bookTickets(screeningData);
     } catch (err) {
-      if (err.response) {
-        console.log(err.response.data);
-        console.log(err.response.status);
-        console.log(err.response.headers);
-      } else {
-        console.log(`Error: ${err.message}`);
-      }
+        console.error('Error fetching screening data:', err);
     }
-  };
+};
 
-
-  const bookTickets = async () => {
+const bookTickets = async (screeningData) => {
+    // Create booking data
+    const bookingData = {
+        user: {
+            id: 18
+        },
+        screening: {
+            id: screeningData.id
+        },
+        numOfSeats: ticketQuantity,
+        createdOn: dateOnly
+    };
 
     try {
-      if (screening) {
-        const bookingData = {
-          user:{
-            id: 1 
-          },
-        screening:{
-          id: screening.id
-        },
-          numOfSeats: ticketQuantity,
-            createdOn: dateOnly
-      };
-      console.log(JSON.stringify(bookingData));
-      // Send POST request to server
-      const response = await api.post('/api/bookings', bookingData);
-
-      // Handle response as needed
-      console.log('Booking successful:', response.data);
-
-      // Close the modal after successful booking
-      onClose();
-    }
-
-
+        // Make the API request to book tickets
+        const response = await api.post('/api/bookings', bookingData);
+        
+        if (response.status !== 200) {
+            console.error(`Error booking tickets: ${response.status} ${response.statusText}`);
+            return;
+        }
+        
+        console.log('Booking successful:', response.data);
+        
+        // Close the modal after successful booking
+        onClose();
     } catch (error) {
-    console.error('Error booking tickets:', error);
-    // Handle error
-  }
+        console.error('Error booking tickets:', error);
+    }
 };
+
 
 const getNext7Days = () => {
   const days = [];
