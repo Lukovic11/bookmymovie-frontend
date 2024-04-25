@@ -10,10 +10,12 @@ import ComingSoon from './components/ComingSoon';
 import NotFound from './components/NotFound';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
+import {UserContextProvider} from './components/UserContext'; 
 
 
 function App() {
   return (
+    <UserContextProvider>
     <BrowserRouter>
       <div className="App" >
         <Navbar />
@@ -39,6 +41,7 @@ function App() {
         <Footer />
       </div>
     </BrowserRouter>
+    </UserContextProvider>
   );
 }
 
