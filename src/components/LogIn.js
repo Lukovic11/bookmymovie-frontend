@@ -4,7 +4,7 @@ import { UserContext } from "./UserContext";
 import api from "../Api.js";
 
 const LogIn = () => {
-  const { setUser } = useContext(UserContext);
+  const { user,setUser,saveUserToLocalStorage } = useContext(UserContext);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [email, setEmail] = useState('');
@@ -32,15 +32,16 @@ const LogIn = () => {
               Authorization: `Bearer ${response.data.token}`
             };
             const response2 = await api.get("/api/users/byEmail/" + email, { headers });
-            if (response2.status===200) {
+            if (response2.status === 200) {
               setUser({
-                id:response2.data.id,
+                id: response2.data.id,
                 firstname: response2.data.firstname,
                 lastname: response2.data.lastname,
                 email: response2.data.email,
                 token: response.data.token
               })
               navigate("/");
+              saveUserToLocalStorage(user);
             }
           }
         } catch (err) {
@@ -58,7 +59,7 @@ const LogIn = () => {
 
       setTriggerEffect(false);
     }
-  }, [triggerEffect, currentUser, setUser, navigate]);
+  }, [triggerEffect, currentUser, setUser, navigate, email]);
 
   return (
     <div className="sign-up jumbotron">

@@ -11,6 +11,8 @@ import NotFound from './components/NotFound';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import {UserContextProvider} from './components/UserContext'; 
+import MyBookings from './components/MyBookings';
+import ScreeningPassedModal from './components/ScreeningPassedModal';
 
 
 function App() {
@@ -32,6 +34,10 @@ function App() {
             <Route exact path="/login" element={<LogIn />} />
 
             <Route exact path="/signup" element={<SignUp />} />
+
+            <Route exact path="/screening-passed-modal" element={<ScreeningPassedModal />} />
+            
+            <Route exact path="/my-bookings" element={<MyBookings />} />
 
             <Route path='/movies/*' element={<NotFound />} />
 

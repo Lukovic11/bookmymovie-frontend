@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import api from "../Api.js";
+import { UserContext } from "./UserContext";
+import ScreeningPassedModal from "./ScreeningPassedModal";
+
 
 const BookTicketsModal = ({ isOpen, onClose, id }) => {
-  const [screening, setScreening] = useState(null);
+  const { user } = useContext(UserContext);
   const today = new Date();
   const dateOnly = today.toISOString().split('T')[0];
+  const [isScreeningPassedModalOpen, setIsScreeningPassedModalOpen] = useState(false);
   const [isMenu1Open, setIsMenu1Open] = useState(false);
   const [isMenu2Open, setIsMenu2Open] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -27,10 +31,8 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   };
 
   const handleDateClick = (date) => {
-    console.log(date);
     const [month, day, year] = date.split('/');
-    const formattedDate = `${2024}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-    console.log(formattedDate);
+    const formattedDate = `20${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     setSelectedDate(formattedDate);
     setIsMenu1Open(false);
   };
@@ -43,57 +45,74 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
   const handleBooking = async (e) => {
     e.preventDefault();
-    
+
     // Check if all required fields are set
     if (!selectedDate || !selectedTimeSlot || !ticketQuantity) {
-        console.error('Missing required fields');
-        return;
+      console.error('Missing required fields');
+      return;
     }
-    
-    try {
-        // Make the API request to get screening data
-        const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
-        const screeningData = response.data;
-        
-        if (response.status !== 200) {
-            console.error(`Error fetching screening data: ${response.status} ${response.statusText}`);
-            return;
-        }
-        
-        // Set the screening state
-        setScreening(screeningData);
-        
-        // Proceed with booking tickets if screening data is available
-        await bookTickets(screeningData);
-    } catch (err) {
-        console.error('Error fetching screening data:', err);
-    }
-};
 
-const bookTickets = async (screeningData) => {
-    // Create booking data
+    try {
+      // Make the API request to get screening data
+      const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
+      const screeningData = response.data;
+
+      if (response.status !== 200) {
+        console.error(`Error fetching screening data: ${response.status} ${response.statusText}`);
+        return;
+      }
+
+      // Set the screening state
+      // setScreening(screeningData);
+
+      // Proceed with booking tickets if screening data is available
+      await bookTickets(screeningData);
+    } catch (err) {
+      console.error('Error fetching screening data:', err);
+    }
+  };
+
+  const bookTickets = async (screeningData) => {
+    // Combine the selected date and time into a single date-time string
+    const bookingDateTimeString = `${selectedDate}T${selectedTimeSlot}:00`;
+    const bookingDateTime = new Date(bookingDateTimeString);
+
+    // Get the current date and time
+    const currentDateTime = new Date();
+
+    // Check if the selected date and time are on the current date and before the current time
+    if (selectedDate === currentDateTime.toISOString().split('T')[0] && bookingDateTime < currentDateTime) {
+        // Open the ScreeningPassedModal instead of logging
+        setIsScreeningPassedModalOpen(true);
+        return; // Exit the function to prevent booking in the past
+    }
+
     const bookingData = {
         user: {
-            id: 18
+            id: user.id,
         },
         screening: {
-            id: screeningData.id
+            id: screeningData.id,
         },
         numOfSeats: ticketQuantity,
-        createdOn: dateOnly
+        createdOn: dateOnly,
     };
 
+    console.log(bookingData);
+
     try {
-        // Make the API request to book tickets
-        const response = await api.post('/api/bookings', bookingData);
-        
+        const headers = {
+            Authorization: `Bearer ${user.token}`,
+        };
+        const response = await api.post('/api/bookings', bookingData, { headers });
+
         if (response.status !== 200) {
             console.error(`Error booking tickets: ${response.status} ${response.statusText}`);
             return;
         }
-        
+
         console.log('Booking successful:', response.data);
-        
+
         // Close the modal after successful booking
         onClose();
     } catch (error) {
@@ -102,102 +121,110 @@ const bookTickets = async (screeningData) => {
 };
 
 
-const getNext7Days = () => {
-  const days = [];
-  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const options = { month: '2-digit', day: '2-digit' }
-  const formatter = new Intl.DateTimeFormat('en', options);
-
-  for (let i = 0; i < 7; i++) {
-    const nextDay = new Date(today);
-    nextDay.setDate(today.getDate() + i);
-    const dayOfWeek = weekdays[nextDay.getDay()];
-    const date = formatter.format(nextDay);
-    days.push({ date, dayOfWeek });
-  }
-  return days;
-};
-
-const next7Days = getNext7Days();
 
 
+  const getNext7Days = () => {
+    const days = [];
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const options = { year: '2-digit', month: '2-digit', day: '2-digit' }
+    const formatter = new Intl.DateTimeFormat('en', options);
 
-if (!isOpen) return null;
-return (
-  <div className="modal-custom">
-    <div className="modal-content-custom">
-      <div className="header-modal">
-        <h2>Book tickets</h2>
-        <span className="close" onClick={onClose}>&times;</span>
+    for (let i = 0; i < 7; i++) {
+      const nextDay = new Date(today);
+      nextDay.setDate(today.getDate() + i);
+      const dayOfWeek = weekdays[nextDay.getDay()];
+      const date = formatter.format(nextDay);
+      days.push({ date, dayOfWeek });
+    }
+    return days;
+  };
+
+  const next7Days = getNext7Days();
+
+
+
+  if (!isOpen) return null;
+  return (
+    <div className="modal-custom">
+      <div className="modal-content-custom">
+        <div className="header-modal">
+          <h2>Book tickets</h2>
+          <span className="close" onClick={onClose}>&times;</span>
+        </div>
+
+        {/* DROPDOWN 1 */}
+
+        <div className="dropdown">
+          <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown1()}>
+            {selectedDate ? selectedDate : "Choose date..."}
+          </button>
+          {isMenu1Open && (
+            <ul className="border-radius-5 dropdown-menu d-block position-static mx-0 border-0 shadow w-220px">
+              {next7Days.map(({ date, dayOfWeek }) => (
+                <li key={date}>
+                  <a className="dropdown-item d-flex gap-2 align-items-center" href="#" onClick={() => handleDateClick(date)}>
+                    <span>{dayOfWeek}</span>
+                    -
+                    <svg className="bi" width="0" height="16"><use xlinkHref="#files"></use></svg>
+                    {date}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* DROPDOWN 2 */}
+
+        <div className="dropdown">
+          <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown2()}>
+            {selectedTimeSlot ? selectedTimeSlot : "Choose time slot..."}
+          </button>
+          {isMenu2Open && (
+            <ul className="border-radius-5 dropdown-menu d-block position-static mx-0 border-0 shadow w-220px">
+              {timeSlots.map((timeSlot, index) => (
+                <li className="listItemDropdown" key={index}>
+                  <a className="dropdown-item d-flex gap-2 align-items-center" href="#" onClick={() => handleTimeClick(timeSlot)}>
+                    <span>{timeSlot}</span>
+                  </a>
+                </li>
+              ))}
+
+            </ul>
+          )}
+        </div>
+
+
+        {/* INPUT FOR NUMBER OF TICKETS */}
+        <div className="noOfTickets">
+          <label htmlFor="ticketQuantity">Number of Tickets: </label>
+          <input
+            type="number"
+            id="ticketQuantity"
+            name="ticketQuantity"
+            min="1"
+            max="6"
+            value={ticketQuantity}
+            onChange={(e) => setTicketQuantity(e.target.value)}
+          />
+        </div>
+
+        {/*SUBMIT BUTTON */}
+        <div className="bookTickets">
+          <button onClick={handleBooking}>
+            Book tickets
+          </button>
+        </div>
+
       </div>
-
-      {/* DROPDOWN 1 */}
-
-      <div className="dropdown">
-        <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown1()}>
-          {selectedDate ? selectedDate : "Choose date..."}
-        </button>
-        {isMenu1Open && (
-          <ul className="border-radius-5 dropdown-menu d-block position-static mx-0 border-0 shadow w-220px">
-            {next7Days.map(({ date, dayOfWeek }) => (
-              <li key={date}>
-                <a className="dropdown-item d-flex gap-2 align-items-center" href="#" onClick={() => handleDateClick(date)}>
-                  <span>{dayOfWeek}</span>
-                  -
-                  <svg className="bi" width="0" height="16"><use xlinkHref="#files"></use></svg>
-                  {date}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* DROPDOWN 2 */}
-
-      <div className="dropdown">
-        <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown2()}>
-          {selectedTimeSlot ? selectedTimeSlot : "Choose time slot..."}
-        </button>
-        {isMenu2Open && (
-          <ul className="border-radius-5 dropdown-menu d-block position-static mx-0 border-0 shadow w-220px">
-            {timeSlots.map((timeSlot, index) => (
-              <li className="listItemDropdown" key={index}>
-                <a className="dropdown-item d-flex gap-2 align-items-center" href="#" onClick={() => handleTimeClick(timeSlot)}>
-                  <span>{timeSlot}</span>
-                </a>
-              </li>
-            ))}
-
-          </ul>
-        )}
-      </div>
-
-
-      {/* INPUT FOR NUMBER OF TICKETS */}
-      <div className="noOfTickets">
-        <label htmlFor="ticketQuantity">Number of Tickets: </label>
-        <input
-          type="number"
-          id="ticketQuantity"
-          name="ticketQuantity"
-          min="1"
-          max="6"
-          value={ticketQuantity}
-          onChange={(e) => setTicketQuantity(e.target.value)}
-        />
-      </div>
-
-      {/*SUBMIT BUTTON */}
-      <div className="bookTickets">
-        <button onClick={handleBooking}>
-          Book tickets
-        </button>
-      </div>
+      {isScreeningPassedModalOpen && (
+    <ScreeningPassedModal isOpen={isScreeningPassedModalOpen} onClose={() => setIsScreeningPassedModalOpen(false)} />
+)}
 
     </div>
-  </div>
-);
+    
+  );
+  
 }
 
 export default BookTicketsModal;

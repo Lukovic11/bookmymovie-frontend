@@ -67,7 +67,7 @@ const SignUp = () => {
 
       setTriggerEffect(false);
     }
-  }, [triggerEffect, currentUser, setUser]);
+  }, [triggerEffect, currentUser, setUser, email, navigate]);
 
 
   return (

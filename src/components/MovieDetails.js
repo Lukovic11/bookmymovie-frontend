@@ -1,28 +1,36 @@
-import { useEffect } from 'react';
+import { useEffect,useContext } from 'react';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from "../Api.js"
 import BookTicketsModal from './BookTicketsModal.js';
+import EmptyUserContextModal from './EmptyUserContextModal'
+import { UserContext } from "./UserContext";
 
-const MovieDetails = ({ }) => {
+const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen]=useState(false);
+  const [isUserContextModalOpen, setIsUserContextModalOpen] = useState(false);
+  const { user } = useContext(UserContext);
 
-  const openModal = ()=>{
-    setIsModalOpen(true);
-  }
+  const openModal = () => {
+    if (user.id!=null) {
+      setIsModalOpen(true);
+    } else {
+      setIsUserContextModalOpen(true);
+    }
+  };
 
   const closeModal=()=>{
     setIsModalOpen(false);
+    setIsUserContextModalOpen(false);
   }
 
   useEffect(() => {
     const getMovie = async () => {
       try {
         const response = await api.get("/api/movies/" + id);
-        console.log(response.data);
         setMovie(response.data);
       } catch (err) {
         if (err.response) {
@@ -49,7 +57,6 @@ const MovieDetails = ({ }) => {
           const vid=videoId.split('&t=')[0];
           const embedUrl = `https://www.youtube.com/embed/${vid}`;
           setYoutubeUrl(embedUrl);
-          console.log(embedUrl);
         }
       } catch (error) {
         console.error('Error fetching YouTube link.');
@@ -86,8 +93,13 @@ const MovieDetails = ({ }) => {
           {movie.isPlaying && <button className="button-85" onClick={openModal}>
             Book Tickets
           </button>}
-          {isModalOpen && (<BookTicketsModal isOpen={isModalOpen} onClose={closeModal} id={id}/>)}
-          {!movie.isPlaying && <p className='not-available'>Coming soon.</p>}
+          {isModalOpen && (
+            <BookTicketsModal isOpen={isModalOpen} onClose={closeModal} id={id} />
+          )}
+          {isUserContextModalOpen && (
+            <EmptyUserContextModal isOpen={isUserContextModalOpen} onClose={closeModal} />
+          )}
+          {!movie.isPlaying && <p className="not-available">Coming soon.</p>}
         </div>
       </div>
     </div>

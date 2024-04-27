@@ -6,7 +6,10 @@ const Navbar = () => {
   const { user, resetUser } = useContext(UserContext);
   console.log(user);
 
+
+
   const handleLogout = () => {
+    localStorage.removeItem('user');
     resetUser();
   }
 
