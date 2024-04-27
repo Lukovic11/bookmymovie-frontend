@@ -10,8 +10,8 @@ export const UserContextProvider = (props) => {
     firstname: '',
     lastname: '',
     email: '',
-    password: '',
-    role: ''
+    role: '',
+    token:''
   })
 
   const resetUser = () => {
@@ -20,8 +20,8 @@ export const UserContextProvider = (props) => {
       firstname: '',
       lastname: '',
       email: '',
-      password: '',
-      role: ''
+      role: '',
+      token:''
     })
   }
 

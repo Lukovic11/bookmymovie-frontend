@@ -1,16 +1,18 @@
 import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import api from "../Api.js";
 
 const LogIn = () => {
   const { setUser } = useContext(UserContext);
-  const [currentUser,setCurrentUser]=useState(null);
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [triggerEffect, setTriggerEffect] = useState(false);
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     setCurrentUser({
       email: email,
@@ -20,24 +22,43 @@ const LogIn = () => {
   };
 
   useEffect(() => {
-    const getUser=async()=>{
-      try {
-        const response=await api.post("/api/login",currentUser);
-        setUser(response.data);
-        console.log(response.data);
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error: ${err.message}`);
+    if (triggerEffect) {
+      const getUser = async () => {
+        try {
+          const response = await api.post("/api/login", currentUser);
+
+          if (response.status === 200) {
+            const headers = {
+              Authorization: `Bearer ${response.data.token}`
+            };
+            const response2 = await api.get("/api/users/byEmail/" + email, { headers });
+            if (response2.status===200) {
+              setUser({
+                id:response2.data.id,
+                firstname: response2.data.firstname,
+                lastname: response2.data.lastname,
+                email: response2.data.email,
+                token: response.data.token
+              })
+              navigate("/");
+            }
+          }
+        } catch (err) {
+          if (err.response) {
+            console.log(err.response.data);
+            console.log(err.response.status);
+            console.log(err.response.headers);
+          } else {
+            console.log(`Error: ${err.message}`);
+          }
         }
-      }
+      };
+
+      getUser();
+
+      setTriggerEffect(false);
     }
-    setTriggerEffect(false);
-    getUser();
-  }, [triggerEffect,currentUser])
+  }, [triggerEffect, currentUser, setUser, navigate]);
 
   return (
     <div className="sign-up jumbotron">
