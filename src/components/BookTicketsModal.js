@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import api from "../Api.js";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../context/UserContext.js";
 import ScreeningPassedModal from "./ScreeningPassedModal";
 
 

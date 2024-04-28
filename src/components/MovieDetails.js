@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from "../Api.js"
 import BookTicketsModal from './BookTicketsModal.js';
 import EmptyUserContextModal from './EmptyUserContextModal'
-import { UserContext } from "./UserContext";
+import { UserContext } from "../context/UserContext.js";
 
 const MovieDetails = () => {
   const { id } = useParams();

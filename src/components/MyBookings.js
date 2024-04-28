@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import api from "../Api.js"
-import { UserContext } from "./UserContext";
+import { UserContext } from "../context/UserContext.js";
 import { Link } from "react-router-dom";
 
 const MyBookings = () => {

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "./UserContext";
-
+import { UserContext } from "../context/UserContext.js";
 const Navbar = () => {
   const { user, resetUser } = useContext(UserContext);
   console.log(user);

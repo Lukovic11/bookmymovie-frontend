@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from "./UserContext";
+import { UserContext } from "../context/UserContext.js";
 import api from "../Api.js";
 
 const SignUp = () => {
