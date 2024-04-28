@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext.js";
-import ScreeningPassedModal from "./ScreeningPassedModal";
+import ScreeningPassedModal from "./ScreeningPassedModal.js";
+import BookingSuccessfulModal from "./BookingSuccessfulModal.js";
+
 
 
 const BookTicketsModal = ({ isOpen, onClose, id }) => {
@@ -14,13 +16,14 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [ticketQuantity, setTicketQuantity] = useState(1);
-
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
   const timeSlots = ["15:00", "18:00", "21:00"].map(slot => {
     const [hours, minutes] = slot.split(':');
     const formattedTime = `${hours.padStart(2, '0')}:${minutes}`;
     return formattedTime;
   });
+
 
   const toggleDropdown1 = () => {
     setIsMenu1Open(!isMenu1Open);
@@ -82,43 +85,42 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
     // Check if the selected date and time are on the current date and before the current time
     if (selectedDate === currentDateTime.toISOString().split('T')[0] && bookingDateTime < currentDateTime) {
-        // Open the ScreeningPassedModal instead of logging
-        setIsScreeningPassedModalOpen(true);
-        return; // Exit the function to prevent booking in the past
+      // Open the ScreeningPassedModal instead of logging
+      setIsScreeningPassedModalOpen(true);
+      return; // Exit the function to prevent booking in the past
     }
 
     const bookingData = {
-        user: {
-            id: user.id,
-        },
-        screening: {
-            id: screeningData.id,
-        },
-        numOfSeats: ticketQuantity,
-        createdOn: dateOnly,
+      user: {
+        id: user.id,
+      },
+      screening: {
+        id: screeningData.id,
+      },
+      numOfSeats: ticketQuantity,
+      createdOn: dateOnly,
     };
 
     console.log(bookingData);
 
     try {
-        const headers = {
-            Authorization: `Bearer ${user.token}`,
-        };
-        const response = await api.post('/api/bookings', bookingData, { headers });
+      const headers = {
+        Authorization: `Bearer ${user.token}`,
+      };
+      const response = await api.post('/api/bookings', bookingData, { headers });
 
-        if (response.status !== 200) {
-            console.error(`Error booking tickets: ${response.status} ${response.statusText}`);
-            return;
-        }
+      if (response.status !== 200) {
+        console.error(`Error booking tickets: ${response.status} ${response.statusText}`);
+        return;
+      }
 
-        console.log('Booking successful:', response.data);
+      console.log('Booking successful');
 
-        // Close the modal after successful booking
-        onClose();
+      setBookingSuccess(true);
     } catch (error) {
-        console.error('Error booking tickets:', error);
+      console.error('Error booking tickets:', error);
     }
-};
+  };
 
 
 
@@ -217,14 +219,19 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         </div>
 
       </div>
+      {bookingSuccess && (
+        <BookingSuccessfulModal
+        isOpen={bookingSuccess} onCloseM={() => setBookingSuccess(false)} onClose={onClose}
+        />
+      )}
       {isScreeningPassedModalOpen && (
-    <ScreeningPassedModal isOpen={isScreeningPassedModalOpen} onClose={() => setIsScreeningPassedModalOpen(false)} />
-)}
+        <ScreeningPassedModal isOpen={isScreeningPassedModalOpen} onClose={() => setIsScreeningPassedModalOpen(false)} />
+      )}
 
     </div>
-    
+
   );
-  
+
 }
 
 export default BookTicketsModal;

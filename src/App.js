@@ -12,7 +12,7 @@ import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import {UserContextProvider} from './context/UserContext'; 
 import MyBookings from './components/MyBookings';
-import ScreeningPassedModal from './components/ScreeningPassedModal';
+import ScreeningPassedModal from './modals/ScreeningPassedModal';
 
 
 function App() {

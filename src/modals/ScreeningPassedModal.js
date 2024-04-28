@@ -7,7 +7,7 @@ const ScreeningPassedModal = ({ isOpen, onClose }) => {
     <div className="modal-custom" >
     <div className="modal-content-custom-login">
       <div className="par">
-        <p style={{ fontWeight: 200 }}>
+        <p style={{ fontWeight: 200, fontSize:"20px" }}>
           You cannot book tickets for this screening anymore. Sorry!
         </p>
       </div>

@@ -6,8 +6,10 @@ import api from "../Api.js"
 const ComingSoon = () => {
 
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setTimeout(() => {
     const getMovies=async()=>{
       try {
         const response=await api.get("/api/movies");
@@ -25,12 +27,16 @@ const ComingSoon = () => {
       }
     }
     getMovies();
+    setLoading(false);
+  }, 1000)
   }, [])
 
 
   return (
     <div className="screenings">
       <h1>Coming soon</h1>
+      <div className='not-found'></div>
+      {loading ? <div class="loader"> </div> : <div> 
       <div className="movie-list">
         {movies.map((movie) => (
           <div className="movie-item" key={movie.id} >
@@ -51,6 +57,7 @@ const ComingSoon = () => {
 
         }
       </div>
+      </div>}
     </div>
   );
 }

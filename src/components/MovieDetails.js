@@ -2,8 +2,8 @@ import { useEffect,useContext } from 'react';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from "../Api.js"
-import BookTicketsModal from './BookTicketsModal.js';
-import EmptyUserContextModal from './EmptyUserContextModal'
+import BookTicketsModal from '../modals/BookTicketsModal.js';
+import EmptyUserContextModal from '../modals/EmptyUserContextModal.js';
 import { UserContext } from "../context/UserContext.js";
 
 const MovieDetails = () => {
