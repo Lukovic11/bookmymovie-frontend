@@ -34,29 +34,25 @@ a:active {
 
 /*Scrollbar*/
 
-/* Width */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #253745;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #06141B;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #040f14;
 }
 
 
-/*Navbar*/
 
+/*Navbar*/
 
 .p-3 {
   position: relative;
@@ -419,6 +415,7 @@ a:active {
 
 
 /*Book Tickets Modal*/
+
 .modal-custom {
   position: fixed;
   top: 0;
@@ -547,6 +544,7 @@ a:active {
 
 
 /*Empty User Context Modal*/
+
 .footer-modal-login {
   display: flex;
   justify-content: right;
@@ -612,20 +610,17 @@ a:active {
 
 
 /* Loader styles */
+
 .loader {
   width: 250px;
   aspect-ratio: 1;
-  /* Set the position to absolute to position the loader relative to the viewport */
   position: absolute;
-  /* Set top and left properties to 50% to position the loader in the center of the page */
   top: 50%;
   left: 50%;
-  /* Use transform to translate the loader to the center */
   transform: translate(-50%, -50%);
   opacity: 0.3;
 }
 
-/* Pseudo-elements for the loader */
 .loader:before,
 .loader:after {
   content: "";
@@ -633,11 +628,9 @@ a:active {
   inset: 0;
   background: #ffb940;
   box-shadow: 0 0 0 50px;
-  /* Clip-path for star shape */
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
 
-/* Animation for the loader */
 .loader:after {
   animation: l5 1s infinite;
   transform: perspective(300px) translateZ(0px);
@@ -669,7 +662,7 @@ a:active {
   min-width: 1000px;
 }
 
-.details-bookings{
+.details-bookings {
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -679,4 +672,3 @@ a:active {
   min-width: 200px;
   position: relative;
 }
-

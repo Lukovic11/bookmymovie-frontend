@@ -10,7 +10,7 @@ import ComingSoon from './components/ComingSoon';
 import NotFound from './components/NotFound';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
-import {UserContextProvider} from './context/UserContext'; 
+import { UserContextProvider } from './context/UserContext';
 import MyBookings from './components/MyBookings';
 import ScreeningPassedModal from './modals/ScreeningPassedModal';
 
@@ -18,35 +18,35 @@ import ScreeningPassedModal from './modals/ScreeningPassedModal';
 function App() {
   return (
     <UserContextProvider>
-    <BrowserRouter>
-      <div className="App" >
-        <Navbar />
-        <div className="content">
-          <Routes>
-            <Route exact path="/" element={<Home />} />
+      <BrowserRouter>
+        <div className="App" >
+          <Navbar />
+          <div className="content">
+            <Routes>
+              <Route exact path="/" element={<Home />} />
 
-            <Route exact path="/movies" element={<MovieScreenings />} />
+              <Route exact path="/movies" element={<MovieScreenings />} />
 
-            <Route exact path="/movies/:id" element={<MovieDetails />} />
+              <Route exact path="/movies/:id" element={<MovieDetails />} />
 
-            <Route exact path="/coming-soon" element={<ComingSoon />} />
+              <Route exact path="/coming-soon" element={<ComingSoon />} />
 
-            <Route exact path="/login" element={<LogIn />} />
+              <Route exact path="/login" element={<LogIn />} />
 
-            <Route exact path="/signup" element={<SignUp />} />
+              <Route exact path="/signup" element={<SignUp />} />
 
-            <Route exact path="/screening-passed-modal" element={<ScreeningPassedModal />} />
-            
-            <Route exact path="/my-bookings" element={<MyBookings />} />
+              <Route exact path="/screening-passed-modal" element={<ScreeningPassedModal />} />
 
-            <Route path='/movies/*' element={<NotFound />} />
+              <Route exact path="/my-bookings" element={<MyBookings />} />
 
-            <Route path='/*' element={<NotFound />} />
-          </Routes>
+              <Route path='/movies/*' element={<NotFound />} />
+
+              <Route path='/*' element={<NotFound />} />
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
     </UserContextProvider>
   );
 }

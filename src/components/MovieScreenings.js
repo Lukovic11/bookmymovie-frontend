@@ -5,6 +5,8 @@ import api from "../Api.js"
 const MovieScreenings = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
   useEffect(() => {
     setTimeout(() => {
       const getMovies = async () => {
@@ -36,25 +38,25 @@ const MovieScreenings = () => {
       <h1>Now playing</h1>
       <div className='not-found'></div>
       <div className="movie-list">
-      {loading ? <div class="loader"> </div> : <div> 
-        {movies.map((movie) => (
-          <div className="movie-item" key={movie.id} >
-            <div className="flex">
-              {movie.poster && <img src={movie.poster} alt={movie.title} />}
-              <Link to={`${movie.id}`}>
-                <button className='button-85'>Details</button>
-              </Link>
+        {loading ? <div class="loader"> </div> : <div>
+          {movies.map((movie) => (
+            <div className="movie-item" key={movie.id} >
+              <div className="flex">
+                {movie.poster && <img src={movie.poster} alt={movie.title} />}
+                <Link to={`${movie.id}`}>
+                  <button className='button-85'>Details</button>
+                </Link>
+              </div>
+              <div className="movie-details">
+                <Link to={`${movie.id}`}>
+                  <h2>{movie.title}</h2>
+                  <p>{movie.genre} | {movie.duration} min</p>
+                </Link>
+              </div>
             </div>
-            <div className="movie-details">
-              <Link to={`${movie.id}`}>
-                <h2>{movie.title}</h2>
-                <p>{movie.genre} | {movie.duration} min</p>
-              </Link>
-            </div>
-          </div>
-        ))
-        }
-      </div>}
+          ))
+          }
+        </div>}
       </div>
     </div>
   )

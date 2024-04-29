@@ -1,4 +1,4 @@
-import { useEffect,useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from "../Api.js"
@@ -10,19 +10,19 @@ const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen]=useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUserContextModalOpen, setIsUserContextModalOpen] = useState(false);
   const { user } = useContext(UserContext);
 
   const openModal = () => {
-    if (user.id!=null) {
+    if (user.id != null) {
       setIsModalOpen(true);
     } else {
       setIsUserContextModalOpen(true);
     }
   };
 
-  const closeModal=()=>{
+  const closeModal = () => {
     setIsModalOpen(false);
     setIsUserContextModalOpen(false);
   }
@@ -54,7 +54,7 @@ const MovieDetails = () => {
         if (movie && movie.trailer) {
           const trailerLink = movie.trailer;
           const videoId = trailerLink.split('v=')[1];
-          const vid=videoId.split('&t=')[0];
+          const vid = videoId.split('&t=')[0];
           const embedUrl = `https://www.youtube.com/embed/${vid}`;
           setYoutubeUrl(embedUrl);
         }

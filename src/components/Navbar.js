@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext.js";
+
+
 const Navbar = () => {
   const { user, resetUser } = useContext(UserContext);
   console.log(user);
-
-
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     resetUser();
   }
-
 
 
   return (
@@ -31,7 +30,6 @@ const Navbar = () => {
 
           <div className="text-end">
             {user.id ? (
-              //User is logged in
               <>
                 <span className="me-3">Hello, {user.firstname}</span>
                 <Link to="/my-bookings"><button type="button" className="btn me-2">My Bookings</button></Link>
@@ -39,7 +37,6 @@ const Navbar = () => {
 
               </>
             ) : (
-              //User is not logged in 
               <>
                 <Link to="/login">  <button type="button" className="btn  me-2">LOGIN</button></Link>
                 <Link to="/signup"><button type="button" className="btn ">SIGN UP</button></Link>

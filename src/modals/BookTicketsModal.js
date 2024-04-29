@@ -33,6 +33,24 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
     setIsMenu2Open(!isMenu2Open);
   };
 
+  const getNext7Days = () => {
+    const days = [];
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const options = { year: '2-digit', month: '2-digit', day: '2-digit' }
+    const formatter = new Intl.DateTimeFormat('en', options);
+
+    for (let i = 0; i < 7; i++) {
+      const nextDay = new Date(today);
+      nextDay.setDate(today.getDate() + i);
+      const dayOfWeek = weekdays[nextDay.getDay()];
+      const date = formatter.format(nextDay);
+      days.push({ date, dayOfWeek });
+    }
+    return days;
+  };
+
+  const next7Days = getNext7Days();
+
   const handleDateClick = (date) => {
     const [month, day, year] = date.split('/');
     const formattedDate = `20${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
@@ -49,14 +67,12 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const handleBooking = async (e) => {
     e.preventDefault();
 
-    // Check if all required fields are set
     if (!selectedDate || !selectedTimeSlot || !ticketQuantity) {
       console.error('Missing required fields');
       return;
     }
 
     try {
-      // Make the API request to get screening data
       const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
       const screeningData = response.data;
 
@@ -65,10 +81,6 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         return;
       }
 
-      // Set the screening state
-      // setScreening(screeningData);
-
-      // Proceed with booking tickets if screening data is available
       await bookTickets(screeningData);
     } catch (err) {
       console.error('Error fetching screening data:', err);
@@ -76,18 +88,14 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   };
 
   const bookTickets = async (screeningData) => {
-    // Combine the selected date and time into a single date-time string
     const bookingDateTimeString = `${selectedDate}T${selectedTimeSlot}:00`;
     const bookingDateTime = new Date(bookingDateTimeString);
 
-    // Get the current date and time
     const currentDateTime = new Date();
 
-    // Check if the selected date and time are on the current date and before the current time
     if (selectedDate === currentDateTime.toISOString().split('T')[0] && bookingDateTime < currentDateTime) {
-      // Open the ScreeningPassedModal instead of logging
       setIsScreeningPassedModalOpen(true);
-      return; // Exit the function to prevent booking in the past
+      return;
     }
 
     const bookingData = {
@@ -121,28 +129,6 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       console.error('Error booking tickets:', error);
     }
   };
-
-
-
-
-  const getNext7Days = () => {
-    const days = [];
-    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const options = { year: '2-digit', month: '2-digit', day: '2-digit' }
-    const formatter = new Intl.DateTimeFormat('en', options);
-
-    for (let i = 0; i < 7; i++) {
-      const nextDay = new Date(today);
-      nextDay.setDate(today.getDate() + i);
-      const dayOfWeek = weekdays[nextDay.getDay()];
-      const date = formatter.format(nextDay);
-      days.push({ date, dayOfWeek });
-    }
-    return days;
-  };
-
-  const next7Days = getNext7Days();
-
 
 
   if (!isOpen) return null;
@@ -221,7 +207,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       </div>
       {bookingSuccess && (
         <BookingSuccessfulModal
-        isOpen={bookingSuccess} onCloseM={() => setBookingSuccess(false)} onClose={onClose}
+          isOpen={bookingSuccess} onCloseM={() => setBookingSuccess(false)} onClose={onClose}
         />
       )}
       {isScreeningPassedModalOpen && (

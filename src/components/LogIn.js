@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext.js";
 import api from "../Api.js";
 
 const LogIn = () => {
-  const { user,setUser,saveUserToLocalStorage } = useContext(UserContext);
+  const { user, setUser, saveUserToLocalStorage } = useContext(UserContext);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [email, setEmail] = useState('');

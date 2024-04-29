@@ -20,7 +20,7 @@ const Carousel = () => {
           </div>
         </div>
         <div className="carousel-item active">
-        <img src="/movie-theater.jpg" className="d-block w-100" alt="Slide 2" />
+          <img src="/movie-theater.jpg" className="d-block w-100" alt="Slide 2" />
           <div className="container">
             <div className="carousel-caption">
               <h1>Another example headline.</h1>
@@ -30,7 +30,7 @@ const Carousel = () => {
           </div>
         </div>
         <div className="carousel-item">
-        <img src="/movie-theater.jpg" className="d-block w-100" alt="Slide 3" />
+          <img src="/movie-theater.jpg" className="d-block w-100" alt="Slide 3" />
           <div className="container">
             <div className="carousel-caption text-end">
               <h1>One more for good measure.</h1>
