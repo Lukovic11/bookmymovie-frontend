@@ -237,6 +237,10 @@ a:active {
   border-radius: 10px;
 }
 
+.button-85:disabled {
+  cursor: not-allowed;
+}
+
 @keyframes glowing-button-85 {
   0% {
     background-position: 0 0;
@@ -672,3 +676,35 @@ a:active {
   min-width: 200px;
   position: relative;
 }
+
+/*Seating chart*/
+
+.seating-chart {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.seat {
+  display: inline-block;
+  margin-right: -20px;
+  height: 20px;
+}
+
+.square{
+  border: 2px solid white; 
+  height: 20px !important; 
+  width: 20px; 
+  display: inline-block;
+  border-top-left-radius: 1mm;
+  border-top-right-radius: 1mm;
+  border-bottom-left-radius: 1.9mm;
+  border-bottom-right-radius: 1.9mm;
+  margin-top: 5px;
+}
+
+.square-clicked {
+  background-color: #B22222;
+  opacity: 0.6;
+}
+
+

@@ -38,7 +38,7 @@ const MovieScreenings = () => {
       <h1>Now playing</h1>
       <div className='not-found'></div>
       <div className="movie-list">
-        {loading ? <div class="loader"> </div> : <div>
+        {loading ? <div className="loader"> </div> : <div>
           {movies.map((movie) => (
             <div className="movie-item" key={movie.id} >
               <div className="flex">

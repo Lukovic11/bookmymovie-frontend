@@ -1,22 +1,27 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext.js";
 import ScreeningPassedModal from "./ScreeningPassedModal.js";
 import BookingSuccessfulModal from "./BookingSuccessfulModal.js";
+import SeatingChart from "./SeatingChart.js";
 
 
 
 const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const { user } = useContext(UserContext);
+  const [screening, setScreening] = useState([]);
   const today = new Date();
   const dateOnly = today.toISOString().split('T')[0];
   const [isScreeningPassedModalOpen, setIsScreeningPassedModalOpen] = useState(false);
   const [isMenu1Open, setIsMenu1Open] = useState(false);
   const [isMenu2Open, setIsMenu2Open] = useState(false);
+  const [isMenu3Open, setIsMenu3Open] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [selectedSeats, setSelectedSeats] = useState(null);
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const timeSlots = ["15:00", "18:00", "21:00"].map(slot => {
     const [hours, minutes] = slot.split(':');
@@ -31,6 +36,10 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
   const toggleDropdown2 = () => {
     setIsMenu2Open(!isMenu2Open);
+  };
+
+  const toggleDropdown3 = () => {
+    setIsMenu3Open(!isMenu3Open);
   };
 
   const getNext7Days = () => {
@@ -60,34 +69,22 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
 
   const handleTimeClick = (timeSlot) => {
+
     setSelectedTimeSlot(timeSlot);
     setIsMenu2Open(false);
   };
 
   const handleBooking = async (e) => {
     e.preventDefault();
-
-    if (!selectedDate || !selectedTimeSlot || !ticketQuantity) {
-      console.error('Missing required fields');
-      return;
-    }
-
+    //NE MOZE TICKETQUANTITY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     try {
-      const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
-      const screeningData = response.data;
-
-      if (response.status !== 200) {
-        console.error(`Error fetching screening data: ${response.status} ${response.statusText}`);
-        return;
-      }
-
-      await bookTickets(screeningData);
+      await bookTickets(screening);
     } catch (err) {
       console.error('Error fetching screening data:', err);
     }
   };
 
-  const bookTickets = async (screeningData) => {
+  const bookTickets = async (screening) => {
     const bookingDateTimeString = `${selectedDate}T${selectedTimeSlot}:00`;
     const bookingDateTime = new Date(bookingDateTimeString);
 
@@ -103,7 +100,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         id: user.id,
       },
       screening: {
-        id: screeningData.id,
+        id: screening.id,
       },
       numOfSeats: ticketQuantity,
       createdOn: dateOnly,
@@ -129,6 +126,44 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       console.error('Error booking tickets:', error);
     }
   };
+
+  useEffect(() => {
+    if (selectedDate && selectedTimeSlot) {
+      if (isReady) {
+        setTimeout(() => {
+          setIsReady(false);
+        }, 1000)
+      } else {
+        setTimeout(() => {
+          setIsReady(true);
+        }, 1000)
+      }
+    }
+  }, [selectedDate, selectedTimeSlot]);
+
+  useEffect(() => {
+    if (selectedDate!=null && selectedTimeSlot!=null) {
+      const getScreening = async () => {
+        try {
+          const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
+          setScreening(response.data);
+          console.log(screening);
+        } catch (err) {
+          if (err.response) {
+            console.log(err.response.data);
+            console.log(err.response.status);
+            console.log(err.response.headers);
+          } else {
+            console.log(`Error: ${err.message}`);
+          }
+        }
+      }
+      getScreening();
+    }
+  }, [selectedDate, selectedTimeSlot, isReady])
+
+
+
 
 
   if (!isOpen) return null;
@@ -182,19 +217,14 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
           )}
         </div>
 
-
-        {/* INPUT FOR NUMBER OF TICKETS */}
-        <div className="noOfTickets">
-          <label htmlFor="ticketQuantity">Number of Tickets: </label>
-          <input
-            type="number"
-            id="ticketQuantity"
-            name="ticketQuantity"
-            min="1"
-            max="6"
-            value={ticketQuantity}
-            onChange={(e) => setTicketQuantity(e.target.value)}
-          />
+        {/* DROPDOWN 3 */}
+        <div className="dropdown">
+          <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown3()} disabled={!selectedDate || !selectedTimeSlot}>
+            {selectedSeats ? selectedSeats : "Choose seats..."}
+          </button>
+          {isMenu3Open && (
+            <SeatingChart screening={screening} />
+          )}
         </div>
 
         {/*SUBMIT BUTTON */}

@@ -13,7 +13,13 @@ const MyBookings = () => {
     try {
       await api.delete("/api/bookings/byId/" + bookingId);
     } catch (err) {
-
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else {
+        console.log(`Error: ${err.message}`);
+      }
     }
   }
 
@@ -37,7 +43,6 @@ const MyBookings = () => {
           if (user.id != null) {
             const response = await api.get("api/bookings/byUserId/" + user.id);
             setBookings(response.data);
-            console.log(bookings);
           }
         } catch (err) {
           if (err.response) {
