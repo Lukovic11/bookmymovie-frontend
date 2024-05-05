@@ -44,6 +44,7 @@ const SignUp = () => {
                 firstname: response2.data.firstname,
                 lastname: response2.data.lastname,
                 email: response2.data.email,
+                role:response2.data.role,
                 token: response.data.token
               })
               navigate("/");

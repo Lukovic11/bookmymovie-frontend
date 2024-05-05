@@ -69,7 +69,6 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
 
   const handleTimeClick = (timeSlot) => {
-
     setSelectedTimeSlot(timeSlot);
     setIsMenu2Open(false);
   };

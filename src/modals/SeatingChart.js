@@ -6,6 +6,7 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
   const [bookings, setBookings] = useState([]);
   const [disabledSeats, setDisabledSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [isMaxSelected,setIsMaxSelected]=useState(false);
   let row = 0;
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
         await Promise.all(bookedSeatsPromises);
 
         setDisabledSeats(fetchedDisabledSeats);
+        console.log(disabledSeats.length);
         console.log(disabledSeats);
       } catch (err) {
         if (err.response) {
@@ -60,6 +62,9 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
 
 
   const handleSeatClick = (isSeatDisabled,rowNumber, seatId) => {
+    if(isMaxSelected){
+      return;
+    }
     if(isSeatDisabled){
       return;
     }
@@ -72,6 +77,9 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
     } else {
       updatedSelectedSeats.push(seatId);
     }
+    if(updatedSelectedSeats.length===6){
+      setIsMaxSelected(true);
+    }
 
     setSelectedSeats(updatedSelectedSeats);
 
@@ -79,6 +87,9 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
   };
 
   const handleSquareClick = (event) => {
+    if(isMaxSelected){
+      return;
+    }
     event.target.classList.toggle('square-clicked');
   };
 
@@ -86,8 +97,12 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
 
   return (
     <div className="seating-chart">
+    {disabledSeats.length===seats.length && <p>Sorry, there are no seats <br />left for this screening</p>}
+    {isMaxSelected && <p>Max number of tickets is 6!</p>}
       {seats.map((seat) => {
-        let rowSeparator = null;
+        const isSeatDisabled = disabledSeats.includes(seat.id);
+        const seatClassName = isSeatDisabled ? "seat-disabled" : "seat";
+      let rowSeparator = null;
 
         if (seat.seatNumber === 1) {
           { row++ };
@@ -101,8 +116,6 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
           );
         }
 
-        const isSeatDisabled = disabledSeats.includes(seat.id);
-        const seatClassName = isSeatDisabled ? "seat-disabled" : "seat";
 
         return (
           <>
