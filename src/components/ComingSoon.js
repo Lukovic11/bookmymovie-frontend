@@ -36,7 +36,7 @@ const ComingSoon = () => {
     <div className="screenings">
       <h1>Coming soon</h1>
       <div className='not-found'></div>
-      {loading ? <div classTime="loader"> </div> : <div>
+      {loading ? <div className="loader"> </div> : <div>
         <div className="movie-list">
           {movies.map((movie) => (
             <div className="movie-item" key={movie.id} >

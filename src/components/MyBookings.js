@@ -73,7 +73,7 @@ const MyBookings = () => {
                 <div className="details-bookings">
                   <p>Movie: <Link to={"/movies/" + `${booking.screening.movie.id}`}>{booking.screening.movie.title}</Link></p>
                   <p>Movie Hall: {booking.screening.movieHall.name}</p>
-                  <p>Number of seats: {booking.numOfSeats}</p>
+                  <p>Number of tickets: {booking.numOfSeats}</p>
                   <p>Date: {booking.screening.date}</p>
                   <p>Time: {formatTime(booking.screening.time)}</p>
                   <p>Created on: {formatDate(booking.createdOn)}</p>

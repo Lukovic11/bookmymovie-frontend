@@ -687,14 +687,12 @@ a:active {
 .seat {
   display: inline-block;
   margin-right: -20px;
-  height: 20px;
 }
 
 .square{
   border: 2px solid white; 
   height: 20px !important; 
   width: 20px; 
-  display: inline-block;
   border-top-left-radius: 1mm;
   border-top-right-radius: 1mm;
   border-bottom-left-radius: 1.9mm;
@@ -707,4 +705,15 @@ a:active {
   opacity: 0.6;
 }
 
-
+.seat-disabled{
+  margin-right: -20px;
+  height: 20px;
+  background-color: #06141B;
+  height: 20px !important; 
+  width: 20px; 
+  border-top-left-radius: 1mm;
+  border-top-right-radius: 1mm;
+  border-bottom-left-radius: 1.9mm;
+  border-bottom-right-radius: 1.9mm;
+  
+}

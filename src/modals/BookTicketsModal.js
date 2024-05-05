@@ -19,7 +19,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState(null);
-  const [ticketQuantity, setTicketQuantity] = useState(1);
+  const [ticketQuantity, setTicketQuantity] = useState(0);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
@@ -76,13 +76,22 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
   const handleBooking = async (e) => {
     e.preventDefault();
-    //NE MOZE TICKETQUANTITY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     try {
       await bookTickets(screening);
     } catch (err) {
       console.error('Error fetching screening data:', err);
     }
   };
+
+  const handleSelectedSeats = (seats) => {
+    let x=0;
+    setSelectedSeats(seats);
+    seats.map(()=>{
+      x++;
+      setTicketQuantity(x);
+    })
+
+};
 
   const bookTickets = async (screening) => {
     const bookingDateTimeString = `${selectedDate}T${selectedTimeSlot}:00`;
@@ -104,6 +113,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       },
       numOfSeats: ticketQuantity,
       createdOn: dateOnly,
+      seats:selectedSeats
     };
 
     console.log(bookingData);
@@ -161,6 +171,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       getScreening();
     }
   }, [selectedDate, selectedTimeSlot, isReady])
+  
 
 
 
@@ -220,10 +231,11 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         {/* DROPDOWN 3 */}
         <div className="dropdown">
           <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown3()} disabled={!selectedDate || !selectedTimeSlot}>
-            {selectedSeats ? selectedSeats : "Choose seats..."}
+            {selectedSeats ? ticketQuantity+" seats"+" selected " : "Choose seats..."}
           </button>
           {isMenu3Open && (
-            <SeatingChart screening={screening} />
+            <SeatingChart screening={screening}
+            onSeatsSelected={handleSelectedSeats} />
           )}
         </div>
 
