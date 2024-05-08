@@ -13,6 +13,7 @@ import LogIn from './components/LogIn';
 import { UserContextProvider } from './context/UserContext';
 import MyBookings from './components/MyBookings';
 import ScreeningPassedModal from './modals/ScreeningPassedModal';
+import Users from './components/Users';
 
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
               <Route exact path="/screening-passed-modal" element={<ScreeningPassedModal />} />
 
               <Route exact path="/my-bookings" element={<MyBookings />} />
+
+              <Route exact path="/users" element={<Users />} />
 
               <Route path='/movies/*' element={<NotFound />} />
 

@@ -6,7 +6,7 @@ import api from "../Api.js";
 const LogIn = () => {
   const { user, setUser, saveUserToLocalStorage } = useContext(UserContext);
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [triggerEffect, setTriggerEffect] = useState(false);

@@ -5,13 +5,11 @@ import { UserContext } from "../context/UserContext.js";
 
 const Navbar = () => {
   const { user, resetUser } = useContext(UserContext);
-  console.log(user.role);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     resetUser();
   }
-
 
   return (
     <header className="p-3" data-bs-theme="dark">
