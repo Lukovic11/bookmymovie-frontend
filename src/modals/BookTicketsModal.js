@@ -23,7 +23,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  const timeSlots = ["15:00", "18:00", "21:00"].map(slot => {
+  const timeSlots = ["13:00", "17:00", "21:00"].map(slot => {
     const [hours, minutes] = slot.split(':');
     const formattedTime = `${hours.padStart(2, '0')}:${minutes}`;
     return formattedTime;

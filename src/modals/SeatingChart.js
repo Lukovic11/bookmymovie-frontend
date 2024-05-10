@@ -58,7 +58,7 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
       }
     }
     fetchDisabledSeats();
-  }, [bookings])
+  }, [bookings,disabledSeats])
 
 
   const handleSeatClick = (isSeatDisabled,rowNumber, seatId) => {

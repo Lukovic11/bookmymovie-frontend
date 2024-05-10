@@ -75,6 +75,10 @@ a:active {
   color: #9BA8AB;
 }
 
+.footer p {
+  width: 350px;
+}
+
 
 
 /*Home*/
@@ -388,7 +392,6 @@ a:active {
 .form-floating {
   color: #040f14;
 }
-
 
 .modal-content button {
   background-color: #06141B;
@@ -794,7 +797,7 @@ a:active {
   background-color: #CD853F;
 }
 
-.data-table button{
+.data-table button {
   padding: 0.3em 1em;
   margin-left: 40px;
   border: none;
@@ -810,6 +813,8 @@ a:active {
   touch-action: manipulation;
 }
 
+/*Search Bar*/
+
 .searchBar {
   max-height: 20px;
   align-self: flex-end;
@@ -817,7 +822,7 @@ a:active {
   margin-top: 30px;
 }
 
-.searchBar input{
+.searchBar input {
   border: none;
   border-radius: 1mm;
   padding-left: 15px;
@@ -825,13 +830,85 @@ a:active {
   opacity: 0.8;
 }
 
-input:focus { 
+input:focus {
   outline: none !important;
   border-color: #719ECE;
   box-shadow: 0 0 20px #719ECE;
 }
-textarea:focus { 
+
+textarea:focus {
   outline: none !important;
   border-color: #719ECE;
   box-shadow: 0 0 20px #719ECE;
+}
+
+/*Add Movie*/
+
+.add-movie {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-movie-form {
+  background-color: #06141B;
+  width: fit-content;
+  height: 535px;
+  border-radius: 5mm;
+  opacity: 0.8;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+.add-movie h1 {
+  margin-top: 20px;
+  width: fit-content;
+  font-size: 30px;
+}
+
+.new-movie-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 5px;
+  margin-left: 30px;
+  border-radius: 2mm;
+}
+
+.new-movie-data p{
+  margin-bottom: 0 !important;
+}
+
+.new-movie-data input {
+  margin-bottom: 15px;
+}
+
+.new-movie-data input:hover{
+  border: 2px solid #11212D;
+}
+
+.new-movie-data input:focus {
+  outline: none !important;
+  border-color: #719ECE;
+  box-shadow: 0 0 10px #719ECE;
+}
+
+.css-ju0y4s-menu{
+  margin-top: 0 !important;
+}
+
+.add-movie-button{
+  width: 150px;
+  margin-top: 30px;
+  margin-left: 50px;
+}
+
+.add-movie-button::before{
+  opacity: 0.5;
+}
+
+.add-movie-button::after{
+  background:#040f14;
+ 
 }

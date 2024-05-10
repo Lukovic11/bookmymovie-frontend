@@ -14,6 +14,8 @@ import { UserContextProvider } from './context/UserContext';
 import MyBookings from './components/MyBookings';
 import ScreeningPassedModal from './modals/ScreeningPassedModal';
 import Users from './components/Users';
+import AddMovie from './components/AddMovie';
+import Screenings from './components/Screenings';
 
 
 function App() {
@@ -41,6 +43,10 @@ function App() {
               <Route exact path="/my-bookings" element={<MyBookings />} />
 
               <Route exact path="/users" element={<Users />} />
+
+              <Route exact path="/add-movie" element={<AddMovie />} />
+
+              <Route exact path="/screenings" element={<Screenings />} />
 
               <Route path='/movies/*' element={<NotFound />} />
 
