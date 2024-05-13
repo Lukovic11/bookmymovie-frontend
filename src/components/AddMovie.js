@@ -19,7 +19,10 @@ const AddMovie = () => {
   const currentYear = new Date().getFullYear('');
   const [error, setError] = useState('');
   const [errorDuration, setErrorDuration] = useState('');
-  const options = countryList().getData('');
+  const options = countryList().getData().map(country => ({
+    label: country.label,
+    value: country.label
+  }));
   const { user } = useContext(UserContext);
   const genres = [
     { label: "Action", value: "Action" },
@@ -28,6 +31,7 @@ const AddMovie = () => {
     { label: "Animation", value: "Animation" },
     { label: "Biography", value: "Biography" },
     { label: "Comedy", value: "Comedy" },
+    { label: "Coming of age", value: "Coming of age" },
     { label: "Crime", value: "Crime" },
     { label: "Documentary", value: "Documentary" },
     { label: "Drama", value: "Drama" },
@@ -64,7 +68,6 @@ const AddMovie = () => {
       trailer: trailer, 
       isPlaying: false 
     };
-    console.log(movie.genre);
 
     try {
       const headers = {
@@ -88,8 +91,8 @@ const AddMovie = () => {
       actionMeta.action === "select-option" ||
       actionMeta.action === "create-option"
     ) {
+      setCountry(newValue ? newValue.value : null); // Use newValue.value to get the value of the selected country
     }
-    setCountry(newValue? newValue.value : null);
   }
 
   const handleChangeGenre = (newValue, actionMeta) => {
@@ -98,8 +101,8 @@ const AddMovie = () => {
       actionMeta.action === "select-option" ||
       actionMeta.action === "create-option"
     ) {
+      setGenre(newValue ? newValue.value : null); // Use newValue.value to get the value of the selected genre
     }
-    setGenre(toString(newValue? newValue.value : null));
   }
 
   useEffect(() => {

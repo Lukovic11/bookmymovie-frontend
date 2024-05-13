@@ -5,7 +5,7 @@ import api from "../Api.js"
 
 const Screenings = () => {
   const [movies, setMovies] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,7 +35,7 @@ const Screenings = () => {
         }
       }
       getMovies();
-      // setLoading(false);
+      setLoading(false);
     }, 1000)
   }, [])
 
@@ -43,9 +43,9 @@ const Screenings = () => {
   return (
     <div className="users">
       <div className='not-found'></div>
-      {/* {loading ? <div className="loader"> </div> : */}
+      {loading ? <div className="loader"> </div> :
         <ScreeningTable movies={movies} />
-      {/* } */}
+      } 
     </div>
   );
 }

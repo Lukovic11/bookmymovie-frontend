@@ -8,6 +8,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const { user } = useContext(UserContext);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleUpdate = async (user) => {
     try {
@@ -53,7 +54,10 @@ const Users = () => {
           Authorization: `Bearer ${user.token}`
         };
         const response = await api.get("/api/users", { headers });
-        setUsers(response.data);
+        setTimeout(() => {
+          setUsers(response.data);
+          setLoading(false);
+        }, 1000);
       } catch (err) {
         if (err.response) {
           console.log(err.response.data);
@@ -71,7 +75,9 @@ const Users = () => {
   return (
     <div className="users">
       <div className='not-found'></div>
-      <UserTable data={users} onMakeAdmin={handleUpdate} onDeleteUser={handleDelete} />
+      {loading ? <div className="loader"> </div> :
+        <UserTable data={users} onMakeAdmin={handleUpdate} onDeleteUser={handleDelete} />
+      }
     </div>
   );
 }
