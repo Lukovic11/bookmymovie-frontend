@@ -847,13 +847,16 @@ textarea:focus {
 .add-movie {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
+  margin-bottom: 14px;
+  margin-top: -14px;
+  margin-left: 150px;
 }
 
 .add-movie-form {
   background-color: #06141B;
   width: fit-content;
-  height: 535px;
+  height: 515px;
   border-radius: 5mm;
   opacity: 0.8;
   display: flex;
@@ -901,11 +904,11 @@ textarea:focus {
 .add-movie-button {
   width: 150px;
   margin-top: 30px;
-  margin-left: 50px;
+  margin-left: 20px;
 }
 
 .add-movie-button::before {
-  opacity: 0.5;
+  opacity: 0.5 !important;
 }
 
 .add-movie-button::after {
@@ -1003,4 +1006,5 @@ textarea:focus {
 .redShadow {
   text-shadow: 0 0 7px red;
 }
+
 

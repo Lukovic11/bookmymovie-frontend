@@ -45,8 +45,6 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
         await Promise.all(bookedSeatsPromises);
 
         setDisabledSeats(fetchedDisabledSeats);
-        console.log(disabledSeats.length);
-        console.log(disabledSeats);
       } catch (err) {
         if (err.response) {
           console.log(err.response.data);
@@ -62,13 +60,13 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
 
 
   const handleSeatClick = (isSeatDisabled,rowNumber, seatId) => {
-    if(isMaxSelected){
+    const isSeatSelected = selectedSeats.includes(seatId);
+    if(isMaxSelected && !isSeatSelected){
       return;
     }
     if(isSeatDisabled){
       return;
     }
-    console.log(`Seat clicked: Row ${rowNumber}, Seat ID ${seatId}`);
     const updatedSelectedSeats = [...selectedSeats];
     const seatIndex = updatedSelectedSeats.indexOf(seatId);
 
@@ -79,6 +77,8 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
     }
     if(updatedSelectedSeats.length===6){
       setIsMaxSelected(true);
+    }else{
+      setIsMaxSelected(false);
     }
 
     setSelectedSeats(updatedSelectedSeats);
@@ -86,8 +86,9 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
     onSeatsSelected(updatedSelectedSeats);
   };
 
-  const handleSquareClick = (event) => {
-    if(isMaxSelected){
+  const handleSquareClick = (event,seatId) => {
+    const isSeatSelected = selectedSeats.includes(seatId);
+    if(isMaxSelected && !isSeatSelected){
       return;
     }
     event.target.classList.toggle('square-clicked');
@@ -129,7 +130,7 @@ const SeatingChart = ({ screening, onSeatsSelected }) => {
               style={{ display: 'inline-block' }}
               key={seat.id}
             >
-             {!isSeatDisabled && <div className="square" onClick={handleSquareClick}>
+             {!isSeatDisabled && <div className="square" onClick={(e) => handleSquareClick(e,seat.id)}>
               </div>
               }
             </div>

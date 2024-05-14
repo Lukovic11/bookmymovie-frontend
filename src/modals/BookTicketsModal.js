@@ -22,6 +22,9 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const [ticketQuantity, setTicketQuantity] = useState(0);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const[fullSeats,setFullSeats]=useState(null);
+  const [seatsToMessage, setSeatsToMessage] = useState('');
+  const [updated,setUpdated]=useState(false);
 
   const timeSlots = ["13:00", "17:00", "21:00"].map(slot => {
     const [hours, minutes] = slot.split(':');
@@ -76,6 +79,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const handleBooking = async (e) => {
     e.preventDefault();
     try {
+      setBookingSuccess(true);
       await bookTickets(screening);
     } catch (err) {
       console.error('Error fetching screening data:', err);
@@ -83,14 +87,14 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   };
 
   const handleSelectedSeats = (seats) => {
-    let x=0;
+    let x = 0;
     setSelectedSeats(seats);
-    seats.map(()=>{
+    seats.map(() => {
       x++;
       setTicketQuantity(x);
     })
 
-};
+  };
 
   const bookTickets = async (screening) => {
     const bookingDateTimeString = `${selectedDate}T${selectedTimeSlot}:00`;
@@ -103,6 +107,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       return;
     }
 
+
     const bookingData = {
       user: {
         id: user.id,
@@ -112,29 +117,76 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       },
       numOfSeats: ticketQuantity,
       createdOn: dateOnly,
-      seats:selectedSeats
+      seats: selectedSeats
     };
 
-    console.log(bookingData);
+
+
+    const emailData = {
+      toEmail: user.email,
+      subject: "Booking confirmation for " + screening.movie.title,
+      body: `User: ${user.firstname} ${user.lastname}\nMovie: ${screening.movie.title}\nMovieHall: ${screening.movieHall.name}\nNumber of tickets: ${ticketQuantity}\nSeats(row/number): ${seatsToMessage}\nDate: ${screening.date}\nTime: ${screening.time}\nCreated on: ${dateOnly}`
+    }
 
     try {
       const headers = {
         Authorization: `Bearer ${user.token}`,
       };
-      const response = await api.post('/api/bookings', bookingData, { headers });
+      const requestData = {
+        booking: bookingData,
+        emailData: emailData
+      };
+      const response = await api.post('/api/bookings', requestData, { headers });
+      setUpdated(true);
 
       if (response.status !== 200) {
         console.error(`Error booking tickets: ${response.status} ${response.statusText}`);
         return;
       }
 
-      console.log('Booking successful');
-
-      setBookingSuccess(true);
     } catch (error) {
       console.error('Error booking tickets:', error);
     }
   };
+
+  useEffect(() => {
+    if (fullSeats === null) {
+      return;
+    }
+  
+    const message = fullSeats.map((seat) => {
+      const { seatRow, seatNumber } = seat; 
+      return `${seatRow}/${seatNumber}`;
+    }).join(', '); 
+  
+    setSeatsToMessage(message);
+  }, [fullSeats]);
+
+  var fs = [];
+  useEffect(() => {
+    if (selectedSeats === null) {
+      return;
+    }
+    const getSeats = async () => {
+      try {
+        await Promise.all(selectedSeats.map(async (seatId) => {
+          const response = await api.get("/api/seats/" + seatId);
+          fs.push(response.data);
+        }));
+        setFullSeats(fs);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+      }
+    }
+    getSeats();
+
+  }, [selectedSeats])
 
   useEffect(() => {
     if (selectedDate && selectedTimeSlot) {
@@ -151,12 +203,11 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   }, [selectedDate, selectedTimeSlot]);
 
   useEffect(() => {
-    if (selectedDate!=null && selectedTimeSlot!=null) {
+    if (selectedDate != null && selectedTimeSlot != null) {
       const getScreening = async () => {
         try {
           const response = await api.get(`/api/screenings/${selectedDate}/${selectedTimeSlot}/${id}`);
           setScreening(response.data);
-          console.log(screening);
         } catch (err) {
           if (err.response) {
             console.log(err.response.data);
@@ -170,7 +221,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       getScreening();
     }
   }, [selectedDate, selectedTimeSlot, isReady])
-  
+
 
 
 
@@ -230,11 +281,11 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         {/* DROPDOWN 3 */}
         <div className="dropdown">
           <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown3()} disabled={!selectedDate || !selectedTimeSlot}>
-            {selectedSeats ? ticketQuantity+" seats"+" selected " : "Choose seats..."}
+            {selectedSeats ? ticketQuantity + " seats" + " selected " : "Choose seats..."}
           </button>
           {isMenu3Open && (
             <SeatingChart screening={screening}
-            onSeatsSelected={handleSelectedSeats} />
+              onSeatsSelected={handleSelectedSeats} />
           )}
         </div>
 
@@ -248,7 +299,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       </div>
       {bookingSuccess && (
         <BookingSuccessfulModal
-          isOpen={bookingSuccess} onCloseM={() => setBookingSuccess(false)} onClose={onClose}
+          isOpen={bookingSuccess} onCloseM={() => setBookingSuccess(false)} onClose={onClose} updated={updated}
         />
       )}
       {isScreeningPassedModalOpen && (

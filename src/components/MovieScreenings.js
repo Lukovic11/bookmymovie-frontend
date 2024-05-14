@@ -12,7 +12,6 @@ const MovieScreenings = () => {
       const getMovies = async () => {
         try {
           const response = await api.get("/api/movies");
-          console.log(response.data);
           const allMovies = response.data;
           setMovies(allMovies.filter(movie => movie.isPlaying === true));
         } catch (err) {

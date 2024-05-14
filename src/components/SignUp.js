@@ -13,6 +13,9 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [triggerEffect, setTriggerEffect] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const [userExists,setUserExists]=useState(false);
+  const [shortPass,setShortPass]=useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,8 +32,24 @@ const SignUp = () => {
 
   useEffect(() => {
     if (triggerEffect) {
+      if (email === '' || password === '' || firstname==='' || lastname==='') {
+        setWarning(true);
+        return;
+      }
+      if(password.length<8){
+        setShortPass(true);
+        return;
+      }
+      setShortPass(false);
+      setWarning(false);
       const getUser = async () => {
         try {
+          const existingUser=await api.get("api/users/doesUserExist/"+email);
+          if(existingUser.data){
+          setUserExists(true);
+          return;
+          }
+          setUserExists(false);
           const response = await api.post("/api/signup", currentUser);
 
           if (response.status === 200) {
@@ -49,9 +68,6 @@ const SignUp = () => {
               })
               navigate("/");
             }
-
-
-
           }
         } catch (err) {
           if (err.response) {
@@ -63,9 +79,7 @@ const SignUp = () => {
           }
         }
       };
-
       getUser();
-
       setTriggerEffect(false);
     }
   }, [triggerEffect, currentUser, setUser, email, navigate]);
@@ -102,6 +116,9 @@ const SignUp = () => {
                   <label htmlFor="floatingPassword">Password</label>
                 </div>
                 <button className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign up</button>
+                {warning && <p style={{color:"red", marginBottom:"-24px",paddingBottom:0}}>Please fill out all the fields</p>}
+                {userExists && !warning && !shortPass && <p style={{color:"red", marginBottom:"-24px",paddingBottom:0}}>There is already a user with this email</p>}
+                {shortPass && !warning && <p style={{color:"red", marginBottom:"-24px",paddingBottom:0}}>Password can't be shorter than 8 characters!</p>}
               </form>
             </div>
           </div>

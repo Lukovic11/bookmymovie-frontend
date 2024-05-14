@@ -12,7 +12,6 @@ const Users = () => {
 
   const handleUpdate = async (user) => {
     try {
-      user.role = "admin";
       await api.put("api/users/put", user);
     } catch (err) {
       if (err.response) {
@@ -54,10 +53,8 @@ const Users = () => {
           Authorization: `Bearer ${user.token}`
         };
         const response = await api.get("/api/users", { headers });
-        setTimeout(() => {
           setUsers(response.data);
           setLoading(false);
-        }, 1000);
       } catch (err) {
         if (err.response) {
           console.log(err.response.data);
@@ -69,7 +66,7 @@ const Users = () => {
       }
     }
     fetchUsers();
-  }, [token, user.token, handleDelete, handleUpdate])
+  }, [token, user.token, handleDelete,handleUpdate])
 
 
   return (

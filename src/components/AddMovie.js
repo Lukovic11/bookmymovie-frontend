@@ -3,9 +3,11 @@ import countryList from 'react-select-country-list';
 import CreatableSelect from "react-select/creatable";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 
 const AddMovie = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [year, setYear] = useState(2000);
@@ -19,6 +21,7 @@ const AddMovie = () => {
   const currentYear = new Date().getFullYear('');
   const [error, setError] = useState('');
   const [errorDuration, setErrorDuration] = useState('');
+  const [emptyField, setEmptyField] = useState(false);
   const options = countryList().getData().map(country => ({
     label: country.label,
     value: country.label
@@ -56,24 +59,32 @@ const AddMovie = () => {
 
   const handleAddMovie = async () => {
     const movie = {
-      title: title, 
-      description: description, 
-      yearOfRelease: parseFloat(year), 
-      duration: parseFloat(duration), 
-      language: language, 
-      countryOfOrigin: country, 
-      director: director, 
-      genre: genre, 
-      poster: poster, 
-      trailer: trailer, 
-      isPlaying: false 
+      title: title,
+      description: description,
+      yearOfRelease: parseFloat(year),
+      duration: parseFloat(duration),
+      language: language,
+      countryOfOrigin: country,
+      director: director,
+      genre: genre,
+      poster: poster,
+      trailer: trailer,
+      isPlaying: false
     };
 
     try {
+      if (movie.title === '' || movie.description === '' || movie.language === ''
+        || movie.countryOfOrigin === '' || movie.director === '' ||
+        movie.genre === '' || movie.poster === '' || movie.trailer === '') {
+        setEmptyField(true);
+        return;
+      }
+      setEmptyField(false);
       const headers = {
         Authorization: `Bearer ${user.token}`
       };
-      const response = await api.post("/api/movies", movie, { headers });
+      await api.post("/api/movies", movie, { headers });
+      navigate("/screenings")
     } catch (err) {
       if (err.response) {
         console.log(err.response.data);
@@ -91,17 +102,16 @@ const AddMovie = () => {
       actionMeta.action === "select-option" ||
       actionMeta.action === "create-option"
     ) {
-      setCountry(newValue ? newValue.value : null); // Use newValue.value to get the value of the selected country
+      setCountry(newValue ? newValue.value : null);
     }
   }
 
   const handleChangeGenre = (newValue, actionMeta) => {
-    console.log("newValue:", newValue);
     if (
       actionMeta.action === "select-option" ||
       actionMeta.action === "create-option"
     ) {
-      setGenre(newValue ? newValue.value : null); // Use newValue.value to get the value of the selected genre
+      setGenre(newValue ? newValue.value : null);
     }
   }
 
@@ -133,7 +143,7 @@ const AddMovie = () => {
       const parsedDuration = parseInt(duration, 10);
 
       if (isNaN(parsedDuration) || parsedDuration < 40) {
-        setErrorDuration(`Duration of a feature film should be more than 40 minutes.`);
+        setErrorDuration(`Duration should be more than 40 minutes.`);
       } else {
         setErrorDuration('');
       }
@@ -145,35 +155,31 @@ const AddMovie = () => {
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      backgroundColor: '#03090b', // Set background color
-      borderRadius: '2mm', // Set border radius
-      color: 'white', // Set text color
-      border: state.isFocused ? '2px solid #11212D' : '2px solid rgb(118, 118, 118)', // Set border color
-      boxShadow: state.isFocused ? '0 0 5px #5e89c7' : 'none', // Set box shadow when focused
-      height: '25px', // Set height
-      width: '200px', // Set width
+      backgroundColor: '#03090b', 
+      borderRadius: '2mm', 
+      color: 'white', 
+      border: state.isFocused ? '2px solid #11212D' : '2px solid rgb(118, 118, 118)', 
+      boxShadow: state.isFocused ? '0 0 5px #5e89c7' : 'none', 
+      height: '25px', 
+      width: '200px', 
       fontSize: '15px',
-      // Add any additional styles as needed
       marginBottom: '15px'
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: '#03090b', // Set background color for the dropdown menu
-      color: 'white', // Set text color for the dropdown menu
+      backgroundColor: '#03090b', 
+      color: 'white', 
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#5e89c7' : '#03090b', // Set option background color when focused
-      color: 'white', // Set option text color
-      padding: '10px', // Set padding for options
-      // Add any additional styles as needed
+      backgroundColor: state.isFocused ? '#5e89c7' : '#03090b', 
+      color: 'white', 
+      padding: '10px', 
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: 'white', // Set the text color of the selected option
-      // Add any additional styles as needed
+      color: 'white', 
     }),
-    // Add more custom styles as needed
   };
 
 
@@ -181,11 +187,10 @@ const AddMovie = () => {
     <div className="add-movie users">
       <div className="not-found"></div>
       <div className="add-movie-form">
-
-
         {/*COLUMN 1*/}
         <div className="new-movie-data">
           <h1 style={{ marginBottom: "10px" }}>Add Movie</h1>
+          {emptyField && <p style={{ color: "red", marginBottom: "-24px", paddingBottom: 0 }}>Please fill out all the fields</p>}
           {/* TITLE */}
           <p style={{ width: "fit-content", fontSize: "18px" }}>Title:</p>
           <input
@@ -207,7 +212,7 @@ const AddMovie = () => {
               backgroundColor: "#03090b",
               opacity: "1",
               paddingLeft: "10px",
-              paddingTop:"4px",
+              paddingTop: "4px",
               marginBottom: "15px"
             }}
             value={description}
@@ -301,7 +306,7 @@ const AddMovie = () => {
             min={1906}
             max={currentYear}
             onChange={(e) => setYear(e.target.value)} />
-          {error && <p style={{ color: 'red', width: "fit-content", fontWeight: "100" }}>{error}</p>}
+          {error && <p style={{ color: 'red', width: "fit-content", fontWeight: "400" }}>{error}</p>}
 
           {/* DURATION */}
           <p style={{ width: "fit-content", fontSize: "18px" }}>Duration:</p>
@@ -316,11 +321,10 @@ const AddMovie = () => {
             value={duration}
             min={40}
             onChange={(e) => setDuration(e.target.value)} />
-          {errorDuration && <p style={{ color: 'red', width: "fit-content", fontWeight: "100" }}>{errorDuration}</p>}
-          <button className="button-85 add-movie-button" onClick={handleAddMovie} >Add movie</button>
+          {errorDuration && <p style={{ color: 'red', width: "fit-content", fontWeight: "400" }}>{errorDuration}</p>}
         </div>
-
       </div>
+      <button className="button-85 add-movie-button" onClick={handleAddMovie} >Add movie</button>
 
     </div>);
 }

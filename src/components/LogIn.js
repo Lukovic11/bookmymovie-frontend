@@ -10,6 +10,8 @@ const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [triggerEffect, setTriggerEffect] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const [noSuchUser, setNoSuchUser] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +25,11 @@ const LogIn = () => {
 
   useEffect(() => {
     if (triggerEffect) {
+      if (email === '' || password === '') {
+        setWarning(true);
+        return;
+      }
+      setWarning(false);
       const getUser = async () => {
         try {
           const response = await api.post("/api/login", currentUser);
@@ -47,6 +54,7 @@ const LogIn = () => {
           }
         } catch (err) {
           if (err.response) {
+            setNoSuchUser(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -70,7 +78,6 @@ const LogIn = () => {
             <div className="modal-header p-5 pt-4 pb-4 border-bottom-0">
               <h1 className="signuptext fw-bold mb-0 fs-2">Log in</h1>
             </div>
-
             <div className="c p-5 pt-0">
               <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
@@ -96,6 +103,8 @@ const LogIn = () => {
                   <label htmlFor="floatingPassword">Password</label>
                 </div>
                 <button className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Log in</button>
+                {noSuchUser && <p style={{ color: "red", marginBottom: "-24px", paddingBottom: 0 }}>Incorrect username or password</p>}
+                {warning && <p style={{ color: "red", marginBottom: "-24px", paddingBottom: 0 }}>Please fill out all the fields</p>}
               </form>
             </div>
           </div>
