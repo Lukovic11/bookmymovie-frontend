@@ -70,9 +70,11 @@ a:active {
   display: flex;
   background-color: #06141B;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 13px;
   border-color: #06141B;
   color: #9BA8AB;
+  z-index: 100 !important;
+  position: relative;
 }
 
 .footer p {
@@ -111,9 +113,10 @@ a:active {
   width: 100%;
   height: 100%;
   background-image: url("./images/cover.jpg");
-  background-color: white;
+  background-color: #06141B;
   background-size: cover;
-  opacity: 0.3;
+  opacity: 0.4;
+  filter: blur(1px);
 }
 
 .jumbotron .jumbotron-text {
@@ -378,11 +381,29 @@ a:active {
 /*Sign up*/
 
 .sign-up {
-  background-color: #06141B;
+  display: flex;
+  background-color: #162633;
+  position: relative;
+}
+
+.sign-up::before{
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("./images/background.jpg");
+  /* background-color: white; */
+  background-size: cover;
+  opacity: 0.5;
+  z-index: 0;
+  filter: blur(3px);
 }
 
 .modal-content {
   background-color: #11212D !important;
+  opacity: 0.9;
 }
 
 .smaller-height {
@@ -693,7 +714,8 @@ a:active {
 }
 
 .square {
-  border: 2px solid white;
+  border: 2px solid #2a3a45;
+  border-width: 2.2px;
   height: 20px !important;
   width: 20px;
   border-top-left-radius: 1mm;
@@ -1017,3 +1039,39 @@ textarea:focus {
 }
 
 
+/* Alert */
+.alert-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #06141B;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1mm;
+  z-index: 10000;
+}
+
+.alert {
+  background-color: #06141B;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 5px;
+  box-shadow: 0 0 15px #2a3a45; /* Light blue box shadow */
+  text-align: center;
+}
+
+.alert-overlay::before{
+  filter: blur(10px) !important;
+}
+
+.alert p {
+  margin: 10px 20px 10px 20px;
+  z-index: 1001;
+}
+
+.blur-background{
+  filter:blur(5px);
+  z-index: 1000;
+}

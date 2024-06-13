@@ -2,11 +2,15 @@ import { useEffect, useContext, useState } from "react";
 import api from "../Api.js"
 import { UserContext } from "../context/UserContext.js";
 import { Link } from "react-router-dom";
+import Alert from '../modals/Alert.js';
+
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
+  const[myAlertGet,setMyAlertGet]=useState(false);
+  const[myAlertDelete,setMyAlertDelete]=useState(false);
 
   const handleDelete = async (e, bookingId) => {
     e.preventDefault();
@@ -14,6 +18,7 @@ const MyBookings = () => {
       await api.delete("/api/bookings/byId/" + bookingId);
     } catch (err) {
       if (err.response) {
+        setMyAlertDelete(true);
         console.log(err.response.data);
         console.log(err.response.status);
         console.log(err.response.headers);
@@ -46,6 +51,7 @@ const MyBookings = () => {
           }
         } catch (err) {
           if (err.response) {
+            setMyAlertGet(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -65,7 +71,7 @@ const MyBookings = () => {
       <h1>Your bookings</h1>
       <div className='not-found'></div>
       {loading ? <div className="loader"> </div> : <div>
-        <div className="booking-list movie-list">
+        <div className={`booking-list movie-list ${(myAlertGet || myAlertDelete) ? 'blur-background': ''}`}>
           {bookings.map((booking) => (
             <div className="movie-item" key={booking.id}>
               <div className="flex-bookings">
@@ -84,6 +90,8 @@ const MyBookings = () => {
           ))}
         </div>
       </div>}
+      {myAlertGet && <Alert message={"Sorry, the system could not load your bookings."} />}
+      {myAlertDelete && <Alert message={"Sorry, the system could not delete the booking."} />}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext.js";
 import RepertoireModal from "../modals/RepertoireModal.js";
+import Alert from "../modals/Alert.js";
 
 const ScreeningTable = ({ movies, onDeleteMovie }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,6 +15,8 @@ const ScreeningTable = ({ movies, onDeleteMovie }) => {
   const [forbidDelete,setForbidDelete]=useState(false);
   const [loadingMessage,setLoadingMessage]=useState(false);
   const [clickedDelete,setClickedDelete]=useState(false);
+  const [myAlert, setMyAlert] = useState(false);
+
   const headers = {
     Authorization: `Bearer ${user.token}`
   };
@@ -96,6 +99,8 @@ const ScreeningTable = ({ movies, onDeleteMovie }) => {
           }
         } catch (err) {
           if (err.response) {
+            setLoadingMessage(false);
+            setMyAlert(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -184,6 +189,9 @@ const ScreeningTable = ({ movies, onDeleteMovie }) => {
           </tbody>
         </table>
       </div>
+      {myAlert && (
+        <Alert message={"Sorry, the system could not update the repertoire."} />
+      )}
     </div>
   );
 }

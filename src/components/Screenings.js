@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import ScreeningTable from "./ScreeningTable";
 import api from "../Api.js"
-
+import Alert from '../modals/Alert.js';
 
 const Screenings = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const[myAlertGet,setMyAlertGet]=useState(false);
+  const[myAlertDelete,setMyAlertDelete]=useState(false);
 
   const handleDeleteMovie = async (movie) => {
     try {
       await api.delete("/api/movies/" + movie.id);
     } catch (err) {
       if (err.response) {
+        setMyAlertDelete(true);
         console.log(err.response.data);
         console.log(err.response.status);
         console.log(err.response.headers);
@@ -41,6 +44,7 @@ const Screenings = () => {
           setMovies(moviesWithSpecificAttributes);
         } catch (err) {
           if (err.response) {
+            setMyAlertGet(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -56,11 +60,15 @@ const Screenings = () => {
 
 
   return (
-    <div className="users">
+    <div>
+    <div className={`users ${(myAlertGet || myAlertDelete) ? 'blur-background': ''}`}>
       <div className='not-found'></div>
       {loading ? <div className="loader"> </div> :
         <ScreeningTable movies={movies} onDeleteMovie={handleDeleteMovie} />
-      } 
+        } 
+    </div>
+      {myAlertGet && <Alert message={"Sorry, the system could not load the movies."} />}
+      {myAlertDelete && <Alert message={"Sorry, the system could not delete the movie."} />}
     </div>
   );
 }

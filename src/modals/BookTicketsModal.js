@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext.js";
 import ScreeningPassedModal from "./ScreeningPassedModal.js";
 import BookingSuccessfulModal from "./BookingSuccessfulModal.js";
 import SeatingChart from "./SeatingChart.js";
-
+import Alert from '../modals/Alert.js';
 
 
 const BookTicketsModal = ({ isOpen, onClose, id }) => {
@@ -25,6 +25,8 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const[fullSeats,setFullSeats]=useState(null);
   const [seatsToMessage, setSeatsToMessage] = useState('');
   const [updated,setUpdated]=useState(false);
+  const[myAlert,setMyAlert]=useState(false);
+
 
   const timeSlots = ["13:00", "17:00", "21:00"].map(slot => {
     const [hours, minutes] = slot.split(':');
@@ -104,6 +106,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
 
     if (selectedDate === currentDateTime.toISOString().split('T')[0] && bookingDateTime < currentDateTime) {
       setIsScreeningPassedModalOpen(true);
+      setBookingSuccess(false);
       return;
     }
 
@@ -140,11 +143,13 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       setUpdated(true);
 
       if (response.status !== 200) {
+        setMyAlert(true);
         console.error(`Error booking tickets: ${response.status} ${response.statusText}`);
         return;
       }
 
     } catch (error) {
+      setMyAlert(true);
       console.error('Error booking tickets:', error);
     }
   };
@@ -230,7 +235,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   if (!isOpen) return null;
   return (
     <div className="modal-custom">
-      <div className="modal-content-custom">
+      <div className={`modal-content-custom ${myAlert ? 'blur-background': ''}`}>
         <div className="header-modal">
           <h2>Book tickets</h2>
           <span className="close" onClick={onClose}>&times;</span>
@@ -281,7 +286,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         {/* DROPDOWN 3 */}
         <div className="dropdown">
           <button className="dropdown-toggle button-85 less-padding" onClick={() => toggleDropdown3()} disabled={!selectedDate || !selectedTimeSlot}>
-            {selectedSeats ? ticketQuantity + " seats" + " selected " : "Choose seats..."}
+            {selectedSeats ? ticketQuantity + " seats selected" : "Choose seats..."}
           </button>
           {isMenu3Open && (
             <SeatingChart screening={screening}
@@ -297,7 +302,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         </div>
 
       </div>
-      {bookingSuccess && (
+      {bookingSuccess && !myAlert && (
         <BookingSuccessfulModal
           isOpen={bookingSuccess} onCloseM={() => setBookingSuccess(false)} onClose={onClose} updated={updated}
         />
@@ -306,6 +311,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
         <ScreeningPassedModal isOpen={isScreeningPassedModalOpen} onClose={() => setIsScreeningPassedModalOpen(false)} />
       )}
 
+      {myAlert && <Alert message={"Sorry, the system could not save the booking."} />}
     </div>
 
   );

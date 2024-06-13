@@ -2,6 +2,7 @@ import { useContext, useState, useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from "../context/UserContext.js";
 import api from "../Api.js";
+import Alert from '../modals/Alert.js';
 
 const SignUp = () => {
 
@@ -16,6 +17,8 @@ const SignUp = () => {
   const [warning, setWarning] = useState(false);
   const [userExists,setUserExists]=useState(false);
   const [shortPass,setShortPass]=useState(false);
+  const[myAlert,setMyAlert]=useState(false);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +74,7 @@ const SignUp = () => {
           }
         } catch (err) {
           if (err.response) {
+            setMyAlert(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -86,9 +90,9 @@ const SignUp = () => {
 
 
   return (
-    <div className="sign-up jumbotron">
+    <div className="sign-up">
       <div className="smaller-height modal modal-sheet position-static d-block" tabIndex="-1" role="dialog" id="modalSignin">
-        <div className="modal-dialog" role="document">
+        <div className={`modal-dialog ${myAlert ? 'blur-background': ''}`} role="document">
           <div className="less-padding modal-content rounded-4 shadow">
             <div className="modal-header p-5 pt-4 pb-4 border-bottom-0">
               <h1 className="signuptext fw-bold mb-0 fs-2">Sign up</h1>
@@ -123,6 +127,7 @@ const SignUp = () => {
             </div>
           </div>
         </div>
+              {myAlert && <Alert message={"Sorry, the system could not sign up the user."} />}
       </div>
     </div>
   );

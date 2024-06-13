@@ -2,11 +2,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../Api.js"
+import Alert from '../modals/Alert.js';
+
 
 const ComingSoon = () => {
-
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const[myAlert,setMyAlert]=useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -17,6 +19,7 @@ const ComingSoon = () => {
           setMovies(allMovies.filter(movie => movie.isPlaying === false));
         } catch (err) {
           if (err.response) {
+            setMyAlert(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -57,6 +60,7 @@ const ComingSoon = () => {
           }
         </div>
       </div>}
+      {myAlert && <Alert message={"Sorry, the system could not load the movies."} />}
     </div>
   );
 }

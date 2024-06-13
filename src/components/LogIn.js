@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext.js";
 import api from "../Api.js";
+import Alert from '../modals/Alert.js';
+
 
 const LogIn = () => {
   const { user, setUser, saveUserToLocalStorage } = useContext(UserContext);
@@ -12,6 +14,8 @@ const LogIn = () => {
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [warning, setWarning] = useState(false);
   const [noSuchUser, setNoSuchUser] = useState(false);
+  const[myAlert,setMyAlert]=useState(false);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +27,12 @@ const LogIn = () => {
     setTriggerEffect(true);
   };
 
+  useEffect(() => {
+    if (user && user.id) {
+      saveUserToLocalStorage(user);
+    }
+  }, [user, saveUserToLocalStorage]);
+  
   useEffect(() => {
     if (triggerEffect) {
       if (email === '' || password === '') {
@@ -49,12 +59,16 @@ const LogIn = () => {
                 token: response.data.token
               })
               navigate("/");
-              saveUserToLocalStorage(user);
+              // saveUserToLocalStorage(user);
             }
           }
         } catch (err) {
           if (err.response) {
-            setNoSuchUser(true);
+            if(err.response.status===404){
+              setNoSuchUser(true);
+              return;
+            }
+            setMyAlert(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -73,7 +87,7 @@ const LogIn = () => {
   return (
     <div className="sign-up jumbotron">
       <div className="modal modal-sheet position-static d-block" tabIndex="-1" role="dialog" id="modalSignin">
-        <div className="modal-dialog" role="document">
+        <div className={`modal-dialog ${myAlert ? 'blur-background': ''}`} role="document">
           <div className="modal-content rounded-4 shadow">
             <div className="modal-header p-5 pt-4 pb-4 border-bottom-0">
               <h1 className="signuptext fw-bold mb-0 fs-2">Log in</h1>
@@ -109,6 +123,8 @@ const LogIn = () => {
             </div>
           </div>
         </div>
+        {myAlert && <Alert message={"Sorry, the system could not log in the user."} />}
+
       </div>
     </div>
   );

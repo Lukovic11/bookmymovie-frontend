@@ -5,6 +5,8 @@ import api from "../Api.js"
 import BookTicketsModal from '../modals/BookTicketsModal.js';
 import EmptyUserContextModal from '../modals/EmptyUserContextModal.js';
 import { UserContext } from "../context/UserContext.js";
+import Alert from '../modals/Alert.js';
+
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -13,6 +15,8 @@ const MovieDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUserContextModalOpen, setIsUserContextModalOpen] = useState(false);
   const { user } = useContext(UserContext);
+  const[myAlert,setMyAlert]=useState(false);
+
 
   const openModal = () => {
     if (user.id != null) {
@@ -34,6 +38,7 @@ const MovieDetails = () => {
         setMovie(response.data);
       } catch (err) {
         if (err.response) {
+          setMyAlert(true);
           console.log(err.response.data);
           console.log(err.response.status);
           console.log(err.response.headers);
@@ -76,7 +81,7 @@ const MovieDetails = () => {
       <h1>{movie.title} ({movie.yearOfRelease})</h1>
       <div className="flex">
         <img src={movie.poster} alt={movie.title} />
-        <div className="details">
+        <div className="details" >
           <p>{movie.genre} | {movie.duration} min</p>
           <p>Directed by: {movie.director}</p>
           <p>Language: {movie.language}</p>
@@ -102,6 +107,7 @@ const MovieDetails = () => {
           {!movie.isPlaying && <p className="not-available">Coming soon.</p>}
         </div>
       </div>
+      {myAlert && <Alert message={"Sorry, the system could not load movie details."} />}
     </div>
   );
 };

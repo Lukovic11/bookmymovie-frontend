@@ -4,6 +4,7 @@ import CreatableSelect from "react-select/creatable";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import Alert from '../modals/Alert.js';
 
 
 const AddMovie = () => {
@@ -56,6 +57,9 @@ const AddMovie = () => {
     { label: "Western", value: "Western" },
     { label: "Alternative", value: "Alternative" }
   ];
+  const[myAlert,setMyAlert]=useState(false);
+
+
 
   const handleAddMovie = async () => {
     const movie = {
@@ -87,6 +91,7 @@ const AddMovie = () => {
       navigate("/screenings")
     } catch (err) {
       if (err.response) {
+        setMyAlert(true);
         console.log(err.response.data);
         console.log(err.response.status);
         console.log(err.response.headers);
@@ -184,9 +189,10 @@ const AddMovie = () => {
 
 
   return (
+    <div>
     <div className="add-movie users">
       <div className="not-found"></div>
-      <div className="add-movie-form">
+      <div className={`add-movie-form ${myAlert ? 'blur-background': ''}`}>
         {/*COLUMN 1*/}
         <div className="new-movie-data">
           <h1 style={{ marginBottom: "10px" }}>Add Movie</h1>
@@ -325,8 +331,10 @@ const AddMovie = () => {
         </div>
       </div>
       <button className="button-85 add-movie-button" onClick={handleAddMovie} >Add movie</button>
-
-    </div>);
+    </div>
+      {myAlert && <Alert message={"Sorry, the system could not save the movie."} />}
+    </div>
+    );
 }
 
 export default AddMovie;
