@@ -22,7 +22,7 @@ function App() {
   return (
     <UserContextProvider>
       <BrowserRouter>
-        <div className="App" >
+        <div className="App">
           <Navbar />
           <div className="content">
             <Routes>

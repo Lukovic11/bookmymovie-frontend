@@ -4,6 +4,7 @@ import api from "../Api";
 import UserTable from "./UserTable";
 import { UserContext } from "../context/UserContext";
 import Alert from "../modals/Alert.js";
+import Success from "../modals/Success.js";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,8 @@ const Users = () => {
   const [myAlertGet, setMyAlertGet] = useState(false);
   const [myAlertPut, setMyAlertPut] = useState(false);
   const [myAlertDelete, setMyAlertDelete] = useState(false);
+  const [successDelete, setSuccessDelete] = useState(false);
+
 
   const handleUpdate = async (user) => {
     try {
@@ -32,6 +35,7 @@ const Users = () => {
   const handleDelete = async (userId) => {
     try {
       await api.delete("/api/users/" + userId);
+      setSuccessDelete(true);
     } catch (err) {
       if (err.response) {
         setMyAlertDelete(true);
@@ -79,7 +83,11 @@ const Users = () => {
 
   return (
     <div>
-      <div className={`users ${(myAlertGet || myAlertDelete || myAlertPut) ? "blur-background" : ""}`}>
+      <div
+        className={`users ${
+          myAlertGet || myAlertDelete || myAlertPut ? "blur-background" : ""
+        }`}
+      >
         <div className="not-found"></div>
         {loading ? (
           <div className="loader"> </div>
@@ -99,6 +107,12 @@ const Users = () => {
       )}
       {myAlertDelete && (
         <Alert message={"Sorry, the system could not delete the user."} />
+      )}
+      {successDelete && (
+        <Success
+          message={"Successfully deleted."}
+          onClose={() => setSuccessDelete(false)}
+        />
       )}
     </div>
   );
