@@ -2,8 +2,8 @@ import { useEffect, useContext, useState } from "react";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext.js";
 import { Link } from "react-router-dom";
-import Alert from "../modals/Alert.js";
-import Success from "../modals/Success.js";
+import Alert from "../modals/AlertModal.js";
+import Success from "../modals/SuccessModal.js";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);

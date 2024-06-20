@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import api from "../Api.js";
 import { UserContext } from "../context/UserContext.js";
 import RepertoireModal from "../modals/RepertoireModal.js";
-import Alert from "../modals/Alert.js";
+import Alert from "../modals/AlertModal.js";
 
 const ScreeningTable = ({ movies, onDeleteMovie }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,7 +100,7 @@ const ScreeningTable = ({ movies, onDeleteMovie }) => {
         } catch (err) {
           if (err.response) {
             setLoadingMessage(false);
-            setMyAlert(true);
+            // setMyAlert(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);

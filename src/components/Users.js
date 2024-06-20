@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import api from "../Api";
 import UserTable from "./UserTable";
 import { UserContext } from "../context/UserContext";
-import Alert from "../modals/Alert.js";
-import Success from "../modals/Success.js";
+import Alert from "../modals/AlertModal.js";
+import Success from "../modals/SuccessModal.js";
 
 const Users = () => {
   const [users, setUsers] = useState([]);

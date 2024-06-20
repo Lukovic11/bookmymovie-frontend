@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import ScreeningTable from "./ScreeningTable";
 import api from "../Api.js";
-import Alert from "../modals/Alert.js";
-import Success from "../modals/Success.js";
+import Alert from "../modals/AlertModal.js";
+import Success from "../modals/SuccessModal.js";
 
 const Screenings = () => {
   const [movies, setMovies] = useState([]);
@@ -42,7 +42,6 @@ const Screenings = () => {
             language: movie.language,
             isPlaying: movie.isPlaying,
           }));
-
           setMovies(moviesWithSpecificAttributes);
         } catch (err) {
           if (err.response) {
@@ -75,7 +74,7 @@ const Screenings = () => {
         )}
       </div>
       {myAlertGet && (
-        <Alert message={"Sorry, the system could not load the movies."} />
+        <Alert message={"Sorry, the system could not load the screenings."} />
       )}
       {myAlertDelete && (
         <Alert message={"Sorry, the system could not delete the movie."} />

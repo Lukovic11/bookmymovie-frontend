@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext.js";
 import api from "../Api.js";
-import Alert from '../modals/Alert.js';
+import Alert from '../modals/AlertModal.js';
 
 
 const LogIn = () => {

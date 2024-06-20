@@ -5,7 +5,7 @@ import api from "../Api.js"
 import BookTicketsModal from '../modals/BookTicketsModal.js';
 import EmptyUserContextModal from '../modals/EmptyUserContextModal.js';
 import { UserContext } from "../context/UserContext.js";
-import Alert from '../modals/Alert.js';
+import Alert from '../modals/AlertModal.js';
 
 
 const MovieDetails = () => {

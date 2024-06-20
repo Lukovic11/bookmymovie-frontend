@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../Api.js";
-import Alert from "../modals/Alert.js";
+import Alert from "../modals/AlertModal.js";
 
 const MovieScreenings = () => {
   const [movies, setMovies] = useState([]);

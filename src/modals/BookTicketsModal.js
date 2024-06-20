@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext.js";
 import ScreeningPassedModal from "./ScreeningPassedModal.js";
 import BookingSuccessfulModal from "./BookingSuccessfulModal.js";
 import SeatingChart from "./SeatingChart.js";
-import Alert from '../modals/Alert.js';
+import Alert from './AlertModal.js';
 
 
 const BookTicketsModal = ({ isOpen, onClose, id }) => {
@@ -26,6 +26,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   const [seatsToMessage, setSeatsToMessage] = useState('');
   const [updated,setUpdated]=useState(false);
   const[myAlert,setMyAlert]=useState(false);
+  const[myAlertScreening,setMyAlertScreening]=useState(false);
 
 
   const timeSlots = ["13:00", "17:00", "21:00"].map(slot => {
@@ -215,6 +216,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
           setScreening(response.data);
         } catch (err) {
           if (err.response) {
+            setMyAlertScreening(true);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -235,7 +237,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
   if (!isOpen) return null;
   return (
     <div className="modal-custom">
-      <div className={`modal-content-custom ${myAlert ? 'blur-background': ''}`}>
+      <div className={`modal-content-custom ${(myAlert || myAlertScreening) ? 'blur-background': ''}`}>
         <div className="header-modal">
           <h2>Book tickets</h2>
           <span className="close" onClick={onClose}>&times;</span>
@@ -312,6 +314,7 @@ const BookTicketsModal = ({ isOpen, onClose, id }) => {
       )}
 
       {myAlert && <Alert message={"Sorry, the system could not save the booking."} />}
+      {myAlertScreening && <Alert message={"Sorry, the system could not load the screening."} />}
     </div>
 
   );

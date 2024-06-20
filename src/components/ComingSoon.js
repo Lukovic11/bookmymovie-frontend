@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../Api.js"
-import Alert from '../modals/Alert.js';
+import Alert from '../modals/AlertModal.js';
 
 
 const ComingSoon = () => {
