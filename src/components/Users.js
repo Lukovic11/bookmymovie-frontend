@@ -62,8 +62,10 @@ const Users = () => {
           Authorization: `Bearer ${user.token}`,
         };
         const response = await api.get("/api/users", { headers });
+        setTimeout(() => {
         setUsers(response.data);
         setLoading(false);
+      }, 1000);
       } catch (err) {
         if (err.response) {
           setTimeout(() => {

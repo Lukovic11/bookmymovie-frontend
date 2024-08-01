@@ -64,7 +64,6 @@ const AddMovie = () => {
 
   const closeModal = ()=>{
     setSuccessDelete(false);
-    navigate("/screenings");
   }
 
   const handleAddMovie = async () => {
